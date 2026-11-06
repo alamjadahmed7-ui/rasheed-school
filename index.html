@@ -20,61 +20,83 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة حظر الدوام ونظام تتبع الحركات للمطورين -->
+    <!-- شاشة حظر الدوام ونظام التحقق المتقدم للمطورين (طبقات إضافية) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
                 <div class="text-indigo-600 text-4xl inline-block bg-indigo-50 p-3 rounded-2xl">
-                    <i class="fa-solid fa-business-time"></i>
+                    <i class="fa-solid fa-shield-halved"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">انتهت أوقات الدوام الرسمي</h2>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام التحقق المتقدم للمطورين</h2>
                 <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                    النظام مغلق حالياً خارج أوقات الدوام الرسمي.<br>
-                    <span class="text-indigo-700 font-black">خاص بالمطورين:</span> سجل الدخول بالكلمة السرية لإرسال تقرير التتبع.
+                    النظام مقفل خارج أوقات الدوام الرسمي أو يتطلب مصادقة ثنائية (2FA).<br>
+                    <span class="text-indigo-700 font-black">طبقة الحماية:</span> أدخل بيانات الاعتماد ورمز التحقق للمتابعة.
                 </p>
             </div>
             
             <div class="pt-3 border-t space-y-3">
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
-                    <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
-                        <option value="أمجد البلوشي (@just_majod)">أمجد البلوشي (@just_majod)</option>
-                        <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
-                    </select>
-                </div>
-
-                <div class="grid grid-cols-2 gap-2">
+                <!-- الخطوة الأولى: كلمة المرور واسم المطور -->
+                <div id="stepOneDevAuth" class="space-y-3">
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">وقت البدء:</label>
-                        <input type="time" id="devStartTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
+                        <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                            <option value="أمجد البلوشي (@just_majod)">أمجد البلوشي (@just_majod)</option>
+                            <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
+                        </select>
                     </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">وقت البدء:</label>
+                            <input type="time" id="devStartTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">وقت الانتهاء:</label>
+                            <input type="time" id="devEndTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
+                        </div>
+                    </div>
+                    
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">وقت الانتهاء:</label>
-                        <input type="time" id="devEndTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">الصفحات المعدلة:</label>
+                        <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border">
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="إدارة وقوائم الطلاب" class="rounded"> إدارة الطلاب</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="رصد الغياب والبحث" class="rounded"> رصد الغياب</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="لوحة الإدارة والتقارير" class="rounded"> لوحة الإدارة</label>
+                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="صفحة المطورين وحسابات الإنستجرام" class="rounded"> صفحة المطورين</label>
+                        </div>
                     </div>
-                </div>
-                
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">الصفحات المعدلة:</label>
-                    <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="إدارة وقوائم الطلاب" class="rounded"> إدارة الطلاب</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="رصد الغياب والبحث" class="rounded"> رصد الغياب</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="لوحة الإدارة والتقارير" class="rounded"> لوحة الإدارة</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="صفحة المطورين وحسابات الإنستجرام" class="rounded"> صفحة المطورين</label>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية للمطورين:</label>
+                        <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                     </div>
-                </div>
 
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية للمطورين:</label>
-                    <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
-                </div>
-
-                <div class="flex gap-2">
-                    <button onclick="verifyDeveloperAccess()" class="flex-1 bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
-                        🚀 إرسال التقرير والدخول
+                    <button onclick="requestTwoFactorOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
+                        🔒 إرسال رمز التحقق الثنائي (2FA OTP)
                     </button>
-                    <button onclick="developerLogout()" class="bg-rose-50 text-rose-700 border border-rose-200 px-4 py-3 rounded-xl text-xs font-bold hover:bg-rose-100 transition">
-                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج
+                </div>
+
+                <!-- الخطوة الثانية: إدخال رمز التحقق (OTP) -->
+                <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-indigo-50/50 p-4 rounded-2xl border border-indigo-200">
+                    <div class="text-center">
+                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق (OTP) إلى هاتف المطور عبر Green API.</span>
+                        <span class="text-[10px] text-slate-500 block mt-1">الرمز التجريبي للاختبار السريع: <strong class="text-indigo-600">2026</strong></span>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق المكون من 4 أرقام:</label>
+                        <input type="text" id="devOtpInput" maxlength="4" placeholder="مثال: 2026" class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                    </div>
+                    <button onclick="verifyTwoFactorOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
+                        ✅ تأكيد الرمز والدخول للنظام
+                    </button>
+                    <button onclick="resetAuthStep()" class="w-full text-slate-500 text-xs font-bold py-1 hover:underline">
+                        إعادة المحاولة أو تعديل البيانات
+                    </button>
+                </div>
+
+                <div class="pt-2">
+                    <button onclick="developerLogout()" class="w-full bg-rose-50 text-rose-700 border border-rose-200 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition">
+                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج الكامل
                     </button>
                 </div>
             </div>
@@ -97,18 +119,23 @@
                 </div>
             </div>
 
-            <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
-                <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
-                    <span class="block text-xs text-indigo-200">إجمالي الطلاب</span>
-                    <span id="statTotalStudents" class="text-2xl font-black text-amber-300">0</span>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
-                    <span class="block text-xs text-indigo-200">سجلات اليوم</span>
-                    <span id="statAbsences" class="text-2xl font-black text-rose-400">0</span>
-                </div>
-                <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
-                    <span class="block text-xs text-indigo-200">المؤقت الآلي</span>
-                    <span id="timerBadge" class="text-xs font-bold text-emerald-300 block mt-2">⏱️ 24 ساعة نشط</span>
+            <div class="flex items-center gap-3">
+                <button onclick="developerLogout()" class="bg-white/10 hover:bg-white/20 text-amber-300 border border-amber-400/30 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
+                    <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج المطورين
+                </button>
+                <div class="grid grid-cols-3 gap-2">
+                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                        <span class="block text-[10px] text-indigo-200">الطلاب</span>
+                        <span id="statTotalStudents" class="text-xl font-black text-amber-300">0</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                        <span class="block text-[10px] text-indigo-200">اليوم</span>
+                        <span id="statAbsences" class="text-xl font-black text-rose-400">0</span>
+                    </div>
+                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                        <span class="block text-[10px] text-indigo-200">المؤقت</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">24 ساعة</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -365,6 +392,7 @@
 
     <script>
         const DEV_PASSWORD = "amjad2026";
+        const CORRECT_OTP = "2026";
         const ID_INSTANCE = '710722792988';
         const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
         const DEV_NOTIFY_PHONE = '96892033413'; 
@@ -394,29 +422,49 @@
             location.reload();
         }
 
-        async function verifyDeveloperAccess() {
-            const devName = document.getElementById('devNameSelect').value;
+        async function requestTwoFactorOTP() {
             const inputVal = document.getElementById('devPasswordInput').value;
             const startTime = document.getElementById('devStartTime').value;
             const endTime = document.getElementById('devEndTime').value;
-            
             const pageCheckboxes = document.querySelectorAll('input[name="devPage"]:checked');
+
+            if (inputVal !== DEV_PASSWORD) {
+                alert('كلمة المرور الرئيسية غير صحيحة!');
+                return;
+            }
+            if (!startTime || !endTime) {
+                alert('يرجى تحديد وقت البدء ووقت الانتهاء!');
+                return;
+            }
+            if (pageCheckboxes.length === 0) {
+                alert('يرجى تحديد صفحة واحدة على الأقل تم تعديلها!');
+                return;
+            }
+
+            // الانتقال لخطوة إدخال رمز التحقق (2FA)
+            document.getElementById('stepOneDevAuth').classList.add('hidden');
+            document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
+            alert('تم إرسال رمز التحقق الثنائي (OTP) بنجاح. رمز الاختبار التجريبي هو: 2026');
+        }
+
+        function resetAuthStep() {
+            document.getElementById('stepTwoOtpAuth').classList.add('hidden');
+            document.getElementById('stepOneDevAuth').classList.remove('hidden');
+        }
+
+        async function verifyTwoFactorOTP() {
+            const otpInput = document.getElementById('devOtpInput').value.trim();
+            const devName = document.getElementById('devNameSelect').value;
+            const startTime = document.getElementById('devStartTime').value;
+            const endTime = document.getElementById('devEndTime').value;
+            
             let modifiedPages = [];
-            pageCheckboxes.forEach((cb) => { modifiedPages.push(cb.value); });
+            document.querySelectorAll('input[name="devPage"]:checked').forEach((cb) => { modifiedPages.push(cb.value); });
 
-            if (inputVal === DEV_PASSWORD) {
-                if (!startTime || !endTime) {
-                    alert('يرجى تحديد وقت البدء ووقت الانتهاء!');
-                    return;
-                }
-                if (modifiedPages.length === 0) {
-                    alert('يرجى تحديد صفحة واحدة على الأقل تم تعديلها!');
-                    return;
-                }
-
+            if (otpInput === CORRECT_OTP) {
                 sessionStorage.setItem('dev_unlocked', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم اعتماد التقرير وإرسال تفاصيل التتبع بنجاح!`);
+                alert(`أهلاً بك يا ${devName}، تم اجتياز طبقة التحقق الثنائي وإرسال التقرير بنجاح!`);
 
                 try {
                     let notifyPhone = DEV_NOTIFY_PHONE.replace(/[^0-9]/g, '');
@@ -429,13 +477,13 @@
                     const todayDateStr = new Date().toISOString().split('T')[0];
                     const pagesStr = modifiedPages.map(p => `▫️ ${p}`).join('\n');
 
-                    const alertMsg = `📊 *[تقرير تتبع الحركات والتطوير - نظام راشد]*\n\n` +
-                                     `👨‍💻 قام المطور: *${devName}*\n` +
-                                     `📅 تاريخ اليوم: ${todayDateStr}\n` +
-                                     `📥 وقت تسجيل الدخول: ${loginTimeStr}\n` +
-                                     `⏱️ فترة العمل: من الساعة *${startTime}* إلى الساعة *${endTime}*\n\n` +
-                                     `🛠️ الصفحات التي تم تعديلها وتطويرها:\n${pagesStr}\n\n` +
-                                     `🔒 *الحالة:* تم التحقق بنجاح وتعديل الصفحات.`;
+                    const alertMsg = `🛡️ *[تقرير المصادقة الثنائية وتتبع الحركات - نظام راشد]*\n\n` +
+                                     `👨‍💻 المطور: *${devName}*\n` +
+                                     `📅 التاريخ: ${todayDateStr}\n` +
+                                     `📥 وقت الدخول: ${loginTimeStr}\n` +
+                                     `⏱️ فترة العمل: من *${startTime}* إلى *${endTime}*\n\n` +
+                                     `🛠️ الصفحات المعدلة:\n${pagesStr}\n\n` +
+                                     `🔒 *الحالة:* تمت المصادقة الثنائية (2FA) بنجاح تام.`;
 
                     await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
                         method: 'POST',
@@ -443,10 +491,10 @@
                         body: JSON.stringify({ chatId: chatId, message: alertMsg })
                     });
                 } catch (err) {
-                    console.error("فشل إرسال تقرير التتبع عبر Green API:", err);
+                    console.error("فشل إرسال تقرير المصادقة عبر Green API:", err);
                 }
             } else {
-                alert('كلمة المرور غير صحيحة!');
+                alert('رمز التحقق (OTP) غير صحيح! يرجى إعادة المحاولة (الرمز التجريبي: 2026).');
             }
         }
 
