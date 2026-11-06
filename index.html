@@ -7,7 +7,7 @@
     
     <meta name="description" content="النظام الرسمي المعتمد لرصد غياب الطلاب والحصص الدراسية وتنبيه أولياء الأمور أوتوماتيكياً في مدرسة راشد بن الوليد للبنين بسلطنة عُمان.">
     <meta name="keywords" content="نظام إدارة الغياب, مدرسة راشد بن الوليد, رصد الغياب, وزارة التربية والتعليم عُمان, متابعة الطلاب">
-    <meta name="author" content="أستاذ سعيد وأستاذ عادل - مدرسة راشد بن الوليد">
+    <meta name="author" content="المطوران: عبد الرحمن البلوشي وأمجد البلوشي - مدرسة راشد بن الوليد">
     
     <meta property="og:title" content="نظام إدارة الغياب - مدرسة راشد بن الوليد للبنين">
     <meta property="og:description" content="البوابة الرسمية لرصد الغياب والحصص وإشعارات الواتساب الآلية.">
@@ -27,19 +27,28 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة الحظر الخاصة بأيام الويكند (الخميس، الجمعة، السبت) -->
+    <!-- شاشة الحظر للإدارة والمعلمين في الويكند مع مدخل المطورين -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-6 text-center hidden">
         <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-4 border-t-8 border-amber-500">
             <div class="text-amber-500 text-5xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h2 class="text-2xl font-black text-slate-900">عذراً، الموقع مغلق مؤقتاً</h2>
+            <h2 class="text-2xl font-black text-slate-900">عذراً، الموقع مغلق للإدارة مؤقتاً</h2>
             <p class="text-slate-600 text-sm font-bold leading-relaxed">
-                جاري تطوير الموقع، يرجى الانتظار.<br>
+                جاري تطوير الموقع وتحديثه ليصبح أفضل فأفضل.<br>
                 (عطلة نهاية الأسبوع: الخميس، الجمعة، والسبت)
             </p>
-            <div class="bg-amber-50 text-amber-800 p-3 rounded-xl text-xs font-mono font-bold">
-                🔒 النظام يعود للعمل تلقائياً يوم الأحد القادم
+            <div class="bg-indigo-50 text-indigo-900 p-3 rounded-xl text-xs font-bold border border-indigo-100">
+                👨‍💻 تطوير وفريق العمل: <span class="text-indigo-700 font-black">عبد الرحمن البلوشي & أمجد البلوشي</span>
+            </div>
+            <div class="pt-3 border-t space-y-2">
+                <p class="text-xs text-slate-500 font-bold">تسجيل دخول المطورين:</p>
+                <div class="flex gap-2">
+                    <input type="password" id="devPasswordInput" placeholder="كلمة مرور المطورين..." class="w-full p-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                    <button onclick="verifyDeveloperAccess()" class="bg-indigo-900 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-indigo-800 transition">
+                        دخول
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -56,7 +65,7 @@
                         <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rasheed-school-1.onrender.com</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة لرصد الحصص والغياب (إشراف: أ. سعيد / أ. عادل)</p>
+                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة لرصد الحصص والغياب | المطوران: عبد الرحمن البلوشي وأمجد البلوشي</p>
                 </div>
             </div>
 
@@ -91,6 +100,9 @@
             </button>
             <button onclick="switchTab('servers')" id="btnServers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
                 <i class="fa-solid fa-database text-emerald-600"></i> إعدادات السيرفرين والحفظ
+            </button>
+            <button onclick="switchTab('developers')" id="btnDevelopers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
+                <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين
             </button>
         </div>
 
@@ -164,7 +176,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 2: رصد الغياب (مع زر تفريغ سجل الغياب) ================= -->
+        <!-- ================= تبويب 2: رصد الغياب ================= -->
         <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -214,7 +226,6 @@
                 <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
                     <h3 class="font-bold text-slate-800">📊 سجل الحالات والغياب المسجلة اليوم</h3>
                     <div class="flex items-center gap-3">
-                        <!-- زر تفريغ سجل الغياب -->
                         <button onclick="clearAbsencesRecords()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-200">
                             <i class="fa-solid fa-trash-can"></i> تفريغ سجل الغياب
                         </button>
@@ -291,7 +302,7 @@
                         <h4 class="font-bold text-indigo-950 text-sm">☁️ Server 2: السيرفر السحابي (Backup Server)</h4>
                         <span class="bg-blue-100 text-blue-800 text-xs px-2.5 py-0.5 rounded-full font-bold">جاهز للنسخ</span>
                     </div>
-                    <p class="text-xs text-slate-600">يسمح لك بتصدير ملف النسخة الاحتياطية واسترجاعه لحماية كافة البيانات في حال تغيير الجهاز أو المتصفح.</p>
+                    <p class="text-xs text-slate-600">يسمح لك بتصدير ملف النسخة الاحتياطية واسترجاعه لحماية كافة البيانات.</p>
                     <div class="flex gap-2">
                         <button onclick="exportCloudBackup()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-bold text-xs transition">
                             📥 تصدير نسخة (Backup)
@@ -305,14 +316,55 @@
             </div>
         </div>
 
+        <!-- ================= تبويب 5: صفحة المطورين (عبد الرحمن وأمجد) ================= -->
+        <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
+            <div class="max-w-xl mx-auto space-y-4">
+                <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                    <i class="fa-solid fa-laptop-code"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية</h3>
+                <p class="text-slate-600 text-sm leading-relaxed">
+                    تم تصميم وبرمجة وتطوير نظام إدارة الغياب والتنبيه الآلي لمدرسة راشد بن الوليد للبنين بكل احترافية وإتقان لتسهيل العمل الإداري.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm">
+                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                        <h4 class="font-black text-slate-900 text-lg mt-3">عبد الرحمن البلوشي</h4>
+                        <p class="text-xs text-slate-500 mt-1">هندسة وتصميم واجهات النظام</p>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm">
+                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                        <h4 class="font-black text-slate-900 text-lg mt-3">أمجد البلوشي</h4>
+                        <p class="text-xs text-slate-500 mt-1">برمجة السيرفرات والبوت والربط</p>
+                    </div>
+                </div>
+                <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs font-bold border border-emerald-200 mt-4">
+                    🟢 النظام يعمل بكفاءة تامة ومؤمن بالكامل على سيرفرات سحابية ومحلية.
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
-        // التحقق من أيام الويكند (الخميس: 4، الجمعة: 5، السبت: 6) وحظر الدخول
-        const currentDayIndex = new Date().getDay(); // 0 الأحد إلى 6 السبت
-        // الخميس (4) والجمعة (5) والسبت (6)
-        if (currentDayIndex === 4 || currentDayIndex === 5 || currentDayIndex === 6) {
+        // كلمة مرور المطورين (يمكنك تعديلها هنا إن أردت)
+        const DEV_PASSWORD = "amjad2026";
+
+        // فحص أيام الويكند (الخميس: 4، الجمعة: 5، السبت: 6) وإغلاق الموقع للإدارة
+        const currentDayIndex = new Date().getDay();
+        if ((currentDayIndex === 4 || currentDayIndex === 5 || currentDayIndex === 6) && sessionStorage.getItem('dev_unlocked') !== 'true') {
             document.getElementById('weekendScreen').classList.remove('hidden');
+        }
+
+        function verifyDeveloperAccess() {
+            const inputVal = document.getElementById('devPasswordInput').value;
+            if (inputVal === DEV_PASSWORD) {
+                sessionStorage.setItem('dev_unlocked', 'true');
+                document.getElementById('weekendScreen').classList.add('hidden');
+                alert('أهلاً بك يا المطور، تم فتح الموقع بصلاحيات عبد الرحمن وأمجد بنجاح!');
+            } else {
+                alert('كلمة المرور غير صحيحة!');
+            }
         }
 
         const ID_INSTANCE = '710722792988';
@@ -323,7 +375,6 @@
 
         let students = JSON.parse(localStorage.getItem('rashid_v18_students')) || [];
         
-        // نظام التصفير الآلي اليومي مع مؤقت 24 ساعة
         let savedData = JSON.parse(localStorage.getItem('rashid_v18_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
@@ -331,7 +382,6 @@
         }
         let absences = savedData.records;
 
-        // مؤقت يتحقق كل دقيقة من تغير اليوم (مرور 24 ساعة) لتصفير السجلات تلقائياً
         setInterval(() => {
             const liveDateStr = new Date().toISOString().split('T')[0];
             if (liveDateStr !== savedData.date) {
@@ -350,9 +400,11 @@
         }
 
         function switchTab(tabID) {
-            ['students', 'absences', 'reports', 'servers'].forEach(t => {
-                document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-                document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2";
+            ['students', 'absences', 'reports', 'servers', 'developers'].forEach(t => {
+                const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+                const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
+                if(el) el.classList.add('hidden');
+                if(btn) btn.className = "px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2";
             });
             document.getElementById('tab' + tabID.charAt(0).toUpperCase() + tabID.slice(1)).classList.remove('hidden');
             document.getElementById('btn' + tabID.charAt(0).toUpperCase() + tabID.slice(1)).className = "px-5 py-3 font-bold text-sm rounded-xl bg-indigo-900 text-white shadow transition flex items-center gap-2";
@@ -430,7 +482,6 @@
             }
         }
 
-        // دالة تفريغ سجل الغياب فقط
         function clearAbsencesRecords() {
             if(confirm('هل تريد تفريغ ومسح سجل غياب اليوم بالكامل؟')) {
                 absences = [];
@@ -514,13 +565,13 @@
         }
 
         function renderAll() {
-            const filterClass = document.getElementById('filterClassSelect').value;
+            const currentFilter = document.getElementById('filterClassSelect').value;
             const sTbody = document.getElementById('studentsTableBody');
             sTbody.innerHTML = '';
 
             const filteredStudents = students.filter(s => {
-                if(filterClass === 'الكل') return true;
-                return s.class.includes(filterClass);
+                if(currentFilter === 'الكل') return true;
+                return s.class.includes(currentFilter);
             });
 
             filteredStudents.forEach((s, idx) => {
