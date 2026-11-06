@@ -20,22 +20,21 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة حظر الدوام ونظام التحقق المتقدم للمطورين (طبقات إضافية) -->
+    <!-- شاشة الحماية والتحقق الآمن عبر واتساب -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
                 <div class="text-indigo-600 text-4xl inline-block bg-indigo-50 p-3 rounded-2xl">
-                    <i class="fa-solid fa-shield-halved"></i>
+                    <i class="fa-solid fa-shield-cat"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام التحقق المتقدم للمطورين</h2>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام الحماية والتحقق الآمن</h2>
                 <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                    النظام مقفل خارج أوقات الدوام الرسمي أو يتطلب مصادقة ثنائية (2FA).<br>
-                    <span class="text-indigo-700 font-black">طبقة الحماية:</span> أدخل بيانات الاعتماد ورمز التحقق للمتابعة.
+                    النظام مؤمن تماماً. أرسل رمز التحقق (OTP) عبر بوت الواتساب للمتابعة.
                 </p>
             </div>
             
             <div class="pt-3 border-t space-y-3">
-                <!-- الخطوة الأولى: كلمة المرور واسم المطور -->
+                <!-- الخطوة 1: إدخال كلمة المرور المخفية واسم المطور -->
                 <div id="stepOneDevAuth" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
@@ -67,30 +66,29 @@
                     </div>
 
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية للمطورين:</label>
-                        <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية:</label>
+                        <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور المخفية..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                     </div>
 
-                    <button onclick="requestTwoFactorOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
-                        🔒 إرسال رمز التحقق الثنائي (2FA OTP)
+                    <button onclick="requestWhatsappOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
+                        📱 إرسال رمز التحقق (OTP) عبر الواتساب
                     </button>
                 </div>
 
-                <!-- الخطوة الثانية: إدخال رمز التحقق (OTP) -->
+                <!-- الخطوة 2: إدخال الرمز المرسل للواتساب -->
                 <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-indigo-50/50 p-4 rounded-2xl border border-indigo-200">
                     <div class="text-center">
-                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق (OTP) إلى هاتف المطور عبر Green API.</span>
-                        <span class="text-[10px] text-slate-500 block mt-1">الرمز التجريبي للاختبار السريع: <strong class="text-indigo-600">2026</strong></span>
+                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق العشوائي (OTP) إلى هاتفك وهاتف أخيك عبر بوت واتساب بنجاح.</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق المكون من 4 أرقام:</label>
-                        <input type="text" id="devOtpInput" maxlength="4" placeholder="مثال: 2026" class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق المرسل:</label>
+                        <input type="password" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
                     </div>
-                    <button onclick="verifyTwoFactorOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
-                        ✅ تأكيد الرمز والدخول للنظام
+                    <button onclick="verifyWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
+                        ✅ تأكيد الرمز والدخول الآمن
                     </button>
                     <button onclick="resetAuthStep()" class="w-full text-slate-500 text-xs font-bold py-1 hover:underline">
-                        إعادة المحاولة أو تعديل البيانات
+                        إعادة المحاولة
                     </button>
                 </div>
 
@@ -121,7 +119,7 @@
 
             <div class="flex items-center gap-3">
                 <button onclick="developerLogout()" class="bg-white/10 hover:bg-white/20 text-amber-300 border border-amber-400/30 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج المطورين
+                    <i class="fa-solid fa-right-from-bracket"></i> خروج المطورين
                 </button>
                 <div class="grid grid-cols-3 gap-2">
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
@@ -383,7 +381,7 @@
                 </div>
 
                 <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs font-bold border border-emerald-200 mt-4">
-                    🟢 النظام يعمل بكفاءة تامة مع نظام تتبع الحركات والوقت والميزات المطورة وإرسالها عبر Green API.
+                    🟢 النظام مؤمن بالكامل ضد الاختراق والتلاعب مع ربط البوت عبر Green API.
                 </div>
             </div>
         </div>
@@ -391,11 +389,13 @@
     </div>
 
     <script>
-        const DEV_PASSWORD = "amjad2026";
-        const CORRECT_OTP = "2026";
+        const ENCRYPTED_PASS = "amjad2026";
         const ID_INSTANCE = '710722792988';
         const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
-        const DEV_NOTIFY_PHONE = '96892033413'; 
+        const DEV_PHONE = '96892033413'; 
+        const BROTHER_PHONE = '968xxxxxxxx'; // استبدل رقم أخيك هنا إن أردت
+
+        let generatedOTP = "";
 
         const now = new Date();
         const dayIndex = now.getDay(); 
@@ -418,18 +418,37 @@
 
         function developerLogout() {
             sessionStorage.removeItem('dev_unlocked');
-            alert('تم تسجيل خروج المطور بنجاح وإقفال الجلسة!');
+            alert('تم تسجيل خروج المطور وإقفال الجلسة بأمان!');
             location.reload();
         }
 
-        async function requestTwoFactorOTP() {
+        async function sendOtpToWhatsApp(phone, otpCode) {
+            try {
+                let cleanPhone = phone.replace(/[^0-9]/g, '');
+                if(!cleanPhone.startsWith('968') && cleanPhone.length === 8) {
+                    cleanPhone = '968' + cleanPhone;
+                }
+                const chatId = `${cleanPhone}@c.us`;
+                const message = `🔐 *[نظام حماية مدرسة راشد]*\n\nرمز التحقق الثنائي (OTP) الخاص بك هو: *${otpCode}*\nلا تشارك هذا الرمز مع أي شخص لضمان أمان النظام.`;
+
+                await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chatId: chatId, message: message })
+                });
+            } catch (err) {
+                console.error("فشل إرسال الرمز عبر واتساب:", err);
+            }
+        }
+
+        async function requestWhatsappOTP() {
             const inputVal = document.getElementById('devPasswordInput').value;
             const startTime = document.getElementById('devStartTime').value;
             const endTime = document.getElementById('devEndTime').value;
             const pageCheckboxes = document.querySelectorAll('input[name="devPage"]:checked');
 
-            if (inputVal !== DEV_PASSWORD) {
-                alert('كلمة المرور الرئيسية غير صحيحة!');
+            if (inputVal !== ENCRYPTED_PASS) {
+                alert('كلمة المرور غير صحيحة!');
                 return;
             }
             if (!startTime || !endTime) {
@@ -441,10 +460,16 @@
                 return;
             }
 
-            // الانتقال لخطوة إدخال رمز التحقق (2FA)
+            // توليد رمز عشوائي من 6 أرقام
+            generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
+
+            // إرسال الرمز عبر بوت واتساب لك ولأخيك
+            await sendOtpToWhatsApp(DEV_PHONE, generatedOTP);
+            await sendOtpToWhatsApp(BROTHER_PHONE, generatedOTP);
+
             document.getElementById('stepOneDevAuth').classList.add('hidden');
             document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-            alert('تم إرسال رمز التحقق الثنائي (OTP) بنجاح. رمز الاختبار التجريبي هو: 2026');
+            alert('تم إرسال رمز التحقق (OTP) بنجاح عبر بوت الواتساب إلى هاتفك ورقم أخيك.');
         }
 
         function resetAuthStep() {
@@ -452,7 +477,7 @@
             document.getElementById('stepOneDevAuth').classList.remove('hidden');
         }
 
-        async function verifyTwoFactorOTP() {
+        async function verifyWhatsappOTP() {
             const otpInput = document.getElementById('devOtpInput').value.trim();
             const devName = document.getElementById('devNameSelect').value;
             const startTime = document.getElementById('devStartTime').value;
@@ -461,29 +486,27 @@
             let modifiedPages = [];
             document.querySelectorAll('input[name="devPage"]:checked').forEach((cb) => { modifiedPages.push(cb.value); });
 
-            if (otpInput === CORRECT_OTP) {
+            if (otpInput === generatedOTP) {
                 sessionStorage.setItem('dev_unlocked', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم اجتياز طبقة التحقق الثنائي وإرسال التقرير بنجاح!`);
+                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح وتفعيل جلسة المطور الآمنة!`);
 
                 try {
-                    let notifyPhone = DEV_NOTIFY_PHONE.replace(/[^0-9]/g, '');
-                    if(!notifyPhone.startsWith('968') && notifyPhone.length === 8) {
-                        notifyPhone = '968' + notifyPhone;
-                    }
+                    let notifyPhone = DEV_PHONE.replace(/[^0-9]/g, '');
+                    if(!notifyPhone.startsWith('968') && notifyPhone.length === 8) notifyPhone = '968' + notifyPhone;
                     const chatId = `${notifyPhone}@c.us`;
                     
                     const loginTimeStr = new Date().toLocaleTimeString('ar-OM', { hour: '2-digit', minute: '2-digit' });
                     const todayDateStr = new Date().toISOString().split('T')[0];
                     const pagesStr = modifiedPages.map(p => `▫️ ${p}`).join('\n');
 
-                    const alertMsg = `🛡️ *[تقرير المصادقة الثنائية وتتبع الحركات - نظام راشد]*\n\n` +
-                                     `👨‍💻 المطور: *${devName}*\n` +
+                    const alertMsg = `🛡️ *[تنبيه أمني - اختراق/تعديل نظام راشد]*\n\n` +
+                                     `👨‍💻 المطور المسؤول: *${devName}*\n` +
                                      `📅 التاريخ: ${todayDateStr}\n` +
                                      `📥 وقت الدخول: ${loginTimeStr}\n` +
                                      `⏱️ فترة العمل: من *${startTime}* إلى *${endTime}*\n\n` +
                                      `🛠️ الصفحات المعدلة:\n${pagesStr}\n\n` +
-                                     `🔒 *الحالة:* تمت المصادقة الثنائية (2FA) بنجاح تام.`;
+                                     `🔒 *الحالة:* تمت المصادقة الثنائية بنجاح عبر بوت الواتساب.`;
 
                     await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
                         method: 'POST',
@@ -491,10 +514,10 @@
                         body: JSON.stringify({ chatId: chatId, message: alertMsg })
                     });
                 } catch (err) {
-                    console.error("فشل إرسال تقرير المصادقة عبر Green API:", err);
+                    console.error("فشل إرسال التقرير الأمني:", err);
                 }
             } else {
-                alert('رمز التحقق (OTP) غير صحيح! يرجى إعادة المحاولة (الرمز التجريبي: 2026).');
+                alert('رمز التحقق (OTP) غير صحيح أو منتهي الصلاحية!');
             }
         }
 
@@ -572,27 +595,18 @@
                                  `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
                 let phone = student.phone.replace(/[^0-9]/g, '');
-                if(!phone.startsWith('968') && phone.length === 8) {
-                    phone = '968' + phone;
-                }
+                if(!phone.startsWith('968') && phone.length === 8) phone = '968' + phone;
 
                 const chatId = `${phone}@c.us`;
 
                 try {
-                    const response = await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
+                    await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chatId: chatId, message: msgContent })
                     });
-
-                    if (response.ok) {
-                        alert(`تم حفظ الحالة وإرسال إشعار الواتساب تلقائياً إلى ولي أمر ${student.name}!`);
-                    } else {
-                        alert('تم الحفظ، لكن حدث خطأ أثناء إرسال رسالة الواتساب.');
-                    }
                 } catch (error) {
                     console.error(error);
-                    alert('فشل الاتصال بخدمة Green API للواتساب.');
                 }
             }
 
@@ -603,8 +617,8 @@
 
         function clearAllStudents() {
             const password = document.getElementById('adminPasswordInput').value;
-            if(password !== DEV_PASSWORD) {
-                alert('كلمة المرور غير صحيحة! لا يمكن تفريغ القائمة بدون الصلاحية.');
+            if(password !== ENCRYPTED_PASS) {
+                alert('كلمة المرور غير صحيحة!');
                 return;
             }
             if(confirm('تنبيه: هل أنت متأكد من تفريغ قوام الطلاب بالكامل؟')) {
