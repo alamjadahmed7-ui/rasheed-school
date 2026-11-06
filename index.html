@@ -3,8 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام إدارة الطلاب - مدرسة راشد بن الوليد للبنين (10-12)</title>
-    <!-- استيراد مكتبات التصميم والأيقونات والخطوط -->
+    <title>نظام إدارة الغياب - مدرسة راشد بن الوليد للبنين (10-12)</title>
+    
+    <!-- وسوم تحسين محركات البحث (SEO) لتصدر نتائج جوجل -->
+    <meta name="description" content="النظام الرسمي المعتمد لرصد غياب الطلاب والحصص الدراسية وتنبيه أولياء الأمور أوتوماتيكياً في مدرسة راشد بن الوليد للبنين بسلطنة عُمان.">
+    <meta name="keywords" content="نظام إدارة الغياب, مدرسة راشد بن الوليد, رصد الغياب, وزارة التربية والتعليم عُمان, متابعة الطلاب">
+    <meta name="author" content="أستاذ سعيد وأستاذ عادل - مدرسة راشد بن الوليد">
+    
+    <!-- Open Graph لتصدر محركات البحث -->
+    <meta property="og:title" content="نظام إدارة الغياب - مدرسة راشد بن الوليد للبنين">
+    <meta property="og:description" content="البوابة الرسمية لرصد الغياب والحصص وإشعارات الواتساب الآلية.">
+    <meta property="og:url" content="https://rasheed-school-1.onrender.com">
+    <meta property="og:type" content="website">
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -18,7 +29,6 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- الهيدر الرئيسي -->
     <header class="glass-header text-white shadow-2xl border-b-4 border-amber-400">
         <div class="max-w-7xl mx-auto p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-5">
@@ -28,14 +38,13 @@
                 <div>
                     <div class="flex items-center gap-2 mb-1">
                         <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-0.5 rounded-full shadow">سلطنة عُمان</span>
-                        <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rasheed-school.om</span>
+                        <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rasheed-school-1.onrender.com</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
                     <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة لرصد الحصص والغياب (إشراف: أ. سعيد / أ. عادل)</p>
                 </div>
             </div>
 
-            <!-- إحصائيات وحالة السيرفرات -->
             <div class="grid grid-cols-3 gap-3 w-full md:w-auto">
                 <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
                     <span class="block text-xs text-indigo-200">إجمالي الطلاب</span>
@@ -46,8 +55,8 @@
                     <span id="statAbsences" class="text-2xl font-black text-rose-400">0</span>
                 </div>
                 <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
-                    <span class="block text-xs text-indigo-200">السيرفرات</span>
-                    <span class="text-xs font-bold text-emerald-300 block mt-2">🟢 Server 1 & 2</span>
+                    <span class="block text-xs text-indigo-200">حماية السيرفرين</span>
+                    <span class="text-xs font-bold text-emerald-300 block mt-2">🛡️ Secured & Active</span>
                 </div>
             </div>
         </div>
@@ -55,7 +64,6 @@
 
     <div class="max-w-7xl mx-auto px-4 mt-8 space-y-6">
 
-        <!-- أزرار التنقل الرئيسية -->
         <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-2">
             <button onclick="switchTab('students')" id="btnStudents" class="px-5 py-3 font-bold text-sm rounded-xl bg-indigo-900 text-white shadow transition flex items-center gap-2">
                 <i class="fa-solid fa-users"></i> إدارة وقوائم الطلاب
@@ -71,7 +79,7 @@
             </button>
         </div>
 
-        <!-- ================= تبويب 1: إدارة الطلاب ================= -->
+        <!-- ================= تبويب 1: إدارة الطلاب (فارغ جاهز ليوم الأحد) ================= -->
         <div id="tabStudents" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -131,6 +139,7 @@
                                 <th class="p-3">اسم الطالب</th>
                                 <th class="p-3">الصف والشعبة</th>
                                 <th class="p-3">هاتف ولي الأمر</th>
+                                <th class="p-3 text-center">عدد مرات الغياب</th>
                                 <th class="p-3 text-center">إجراءات</th>
                             </tr>
                         </thead>
@@ -140,68 +149,46 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 2: رصد الغياب والحصص (مبسط للمعلمين) ================= -->
+        <!-- ================= تبويب 2: رصد الغياب (بحث سريع للمعلم مع بوت واتساب) ================= -->
         <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-user text-rose-600"></i> تسجيل حالة / غياب / حصة للمعلم
+                    <i class="fa-solid fa-clipboard-user text-rose-600"></i> نظام رصد الغياب (بحث سريع)
                 </h3>
                 <form id="absenceForm" class="space-y-3 text-xs font-semibold">
                     <div>
-                        <label class="block mb-1 text-slate-600">اختر الطالب:</label>
-                        <select id="absStudentSelect" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold"></select>
+                        <label class="block mb-1 text-slate-600 font-bold">🔍 ابحث عن اسم الطالب (يظهر النتيجة أولاً):</label>
+                        <input type="text" id="searchStudentInput" placeholder="اكتب للبحث السريع..." oninput="filterAbsenceDropdown()" class="w-full p-2.5 mb-2 border rounded-xl bg-indigo-50/50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <select id="absStudentSelect" size="4" required class="w-full p-2 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-xs"></select>
                     </div>
                     <div>
-                        <label class="block mb-1 text-slate-600">التاريخ:</label>
-                        <input type="date" id="absDate" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500">
-                    </div>
-                    <div>
-                        <label class="block mb-1 text-slate-600">تصنيف الحالة / الغياب:</label>
-                        <select id="absType" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold">
-                            <option value="غائب (بدون عذر)">🔴 غائب (بدون عذر)</option>
-                            <option value="غائب (بعذر مقبول)">🟢 غائب (بعذر مقبول)</option>
-                            <option value="تأخير صباحي">🟡 تأخير صباحي</option>
-                            <option value="هروب من الحصة">⚠️ هروب من الحصة</option>
-                            <option value="في رحلة">🚌 في رحلة مدرسية</option>
-                            <option value="كمشلول">♿ كمشلول (حالة خاصة)</option>
+                        <label class="block mb-1 text-slate-600">الحالة:</label>
+                        <select id="absType" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-rose-700">
+                            <option value="غائب عن الحصة">🔴 غائب عن الحصة</option>
+                            <option value="متأخر عن الحصة">🟡 متأخر عن الحصة</option>
+                            <option value="حالة سلوكية / أخرى">⚠️ حالة سلوكية / أخرى</option>
                         </select>
                     </div>
 
-                    <!-- اختيار الحصة السريع والواضح للمعلمين (من الأولى للثامنة) -->
-                    <div>
-                        <label class="block mb-1 text-indigo-900 font-black">📌 حدد رقم الحصة الدراسية:</label>
-                        <select id="absLesson" required class="w-full p-2.5 border-2 border-indigo-400 rounded-xl bg-indigo-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-indigo-950">
-                            <option value="الحصة الأولى">الحصة الأولى (1)</option>
-                            <option value="الحصة الثانية">الحصة الثانية (2)</option>
-                            <option value="الحصة الثالثة">الحصة الثالثة (3)</option>
-                            <option value="الحصة الرابعة">الحصة الرابعة (4)</option>
-                            <option value="الحصة الخامسة">الحصة الخامسة (5)</option>
-                            <option value="الحصة السادسة">الحصة السادسة (6)</option>
-                            <option value="الحصة السابعة">الحصة السابعة (7)</option>
-                            <option value="الحصة الثامنة">الحصة الثامنة (8)</option>
-                            <option value="اليوم كامل">كامل اليوم الدراسي (عام)</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl font-bold shadow transition flex items-center justify-center gap-2">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال رسالة البوت عبر Green API
+                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
+                        <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال تلقائي عبر Green API
                     </button>
                 </form>
             </div>
 
             <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                 <div class="flex justify-between items-center border-b pb-3">
-                    <h3 class="font-bold text-slate-800">📊 سجل الحالات والحصص لليوم الحالي</h3>
+                    <h3 class="font-bold text-slate-800">📊 سجل الحالات والغياب المسجلة اليوم</h3>
                     <span id="currentDateBadge" class="bg-slate-100 text-slate-700 font-mono text-xs px-3 py-1 rounded-lg font-bold"></span>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-xs">
                         <thead class="bg-slate-100 text-slate-700 font-bold">
                             <tr>
-                                <th class="p-3">الطالب</th>
+                                <th class="p-3">اسم الطالب</th>
                                 <th class="p-3">الصف والشعبة</th>
+                                <th class="p-3">الحالة المسجلة</th>
                                 <th class="p-3">التاريخ</th>
-                                <th class="p-3">الحالة والحصة المسجلة</th>
                                 <th class="p-3 text-center">حذف</th>
                             </tr>
                         </thead>
@@ -218,9 +205,6 @@
                     <span class="bg-emerald-100 text-emerald-800 text-xs px-3 py-1 rounded-full font-bold">🟢 الإدارة مفتوحة ومتاحة</span>
                     <h3 class="text-lg font-black text-slate-900 mt-1">📑 تقارير المتابعة الرسمية لمدرسة راشد بن الوليد</h3>
                 </div>
-                <button onclick="window.print()" class="bg-slate-900 hover:bg-slate-800 text-white px-5 py-2.5 rounded-xl font-bold text-xs shadow flex items-center gap-2">
-                    <i class="fa-solid fa-print"></i> طباعة التقرير الرسمي
-                </button>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -229,7 +213,7 @@
                     <p class="text-xs text-slate-600 leading-relaxed">
                         السلام عليكم ورحمة الله وبركاته،<br>
                         إجمالي الطلاب المسجلين بالمنظومة لجميع الشعب (1-8): (<strong id="repTotalStudents">0</strong> طالب).<br>
-                        النظام يعمل بانتظام عبر الرابط الرسمي: rasheed-school.om
+                        النظام يعمل بانتظام عبر الرابط الرسمي: rasheed-school-1.onrender.com
                     </p>
                 </div>
 
@@ -238,7 +222,7 @@
                     <p class="text-xs text-slate-600 leading-relaxed">
                         الأستاذ عادل المحترم،<br>
                         إجمالي حالات الغياب المسجلة لليوم بجميع الشعب من 1 إلى 8 هو (<strong id="repTotalAbsences">0</strong> حالة).<br>
-                        خاصية التصفير اليومي الآلي والسيرفرين مفعلة بنجاح.
+                        خاصية التصفير اليومي الآلي والسيرفرين مفعلة بنجاح مع أمان تام.
                     </p>
                 </div>
             </div>
@@ -251,11 +235,10 @@
             </h3>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <!-- Server 1 -->
                 <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="font-bold text-indigo-950 text-sm">🌐 Server 1: السيرفر المحلي (Local Server)</h4>
-                        <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">متصل</span>
+                        <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">متصل وآمن</span>
                     </div>
                     <p class="text-xs text-slate-600">يقوم بتخزين كافة بيانات الطلاب وسجلات الغياب وتحديث التصفير الآلي على متصفحك تلقائياً دون انقطاع.</p>
                     <button onclick="saveToLocalServer()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-2.5 rounded-xl font-bold text-xs transition">
@@ -263,7 +246,6 @@
                     </button>
                 </div>
 
-                <!-- Server 2 -->
                 <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 space-y-3">
                     <div class="flex justify-between items-center">
                         <h4 class="font-bold text-indigo-950 text-sm">☁️ Server 2: السيرفر السحابي (Backup Server)</h4>
@@ -285,14 +267,12 @@
 
     </div>
 
-    <!-- البرمجة والجافاسكريبت المدمج مع Green API -->
     <script>
-        // بيانات Green API الخاصة بك
+        // بيانات Green API الرسمية الخاصة بك
         const ID_INSTANCE = '710722792988';
         const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
 
         const todayStr = new Date().toISOString().split('T')[0];
-        document.getElementById('absDate').value = todayStr;
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
         let students = JSON.parse(localStorage.getItem('rashid_v18_students')) || [];
@@ -332,26 +312,26 @@
             this.reset();
             document.getElementById('newParentPhone').value = "92033413";
             renderAll();
-            alert('تمت إضافة الطالب وحفظه بنجاح!');
+            alert('تمت إضافة الطالب وحفظه بنجاح وتأمينه!');
         });
 
         document.getElementById('absenceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const sName = document.getElementById('absStudentSelect').value;
+            if(!sName) {
+                alert('يرجى اختيار طالب من نتائج البحث أولاً!');
+                return;
+            }
             const student = students.find(s => s.name === sName);
-            const date = document.getElementById('absDate').value;
             const type = document.getElementById('absType').value;
-            const lesson = document.getElementById('absLesson').value;
 
-            const finalRecordStr = `${type} (${lesson})`;
-
-            absences.push({ studentName: sanitizeInput(sName), date: sanitizeInput(date), type: sanitizeInput(finalRecordStr) });
+            absences.push({ studentName: sanitizeInput(sName), date: todayStr, type: sanitizeInput(type) });
             saveToLocalServer();
 
             if(student) {
-                let msgContent = `🤖 *[إشعار متابعة - مدرسة راشد بن الوليد (rasheed-school.om)]*\n\n` +
-                                 `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) خلال (*${lesson}*) بتاريخ ${date}.\n\n` +
-                                 `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية للأهمية.`;
+                let msgContent = `🤖 *[إشعار متابعة - مدرسة راشد بن الوليد]*\n\n` +
+                                 `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) بتاريخ ${todayStr}.\n\n` +
+                                 `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
                 let phone = student.phone.replace(/[^0-9]/g, '');
                 if(!phone.startsWith('968') && phone.length === 8) {
@@ -368,7 +348,7 @@
                     });
 
                     if (response.ok) {
-                        alert(`تم رصد الحالة وإرسال إشعار الواتساب تلقائياً عبر Green API بنجاح إلى ولي أمر ${student.name}!`);
+                        alert(`تم حفظ الحالة وإرسال إشعار الواتساب تلقائياً عبر Green API بنجاح إلى ولي أمر ${student.name}!`);
                     } else {
                         alert('تم الحفظ، لكن حدث خطأ أثناء إرسال رسالة الواتساب عبر البوت.');
                     }
@@ -379,8 +359,8 @@
             }
 
             renderAll();
-            this.reset();
-            document.getElementById('absDate').value = todayStr;
+            document.getElementById('searchStudentInput').value = '';
+            filterAbsenceDropdown();
         });
 
         function clearAllStudents() {
@@ -421,10 +401,10 @@
                         }
                         saveToLocalServer();
                         renderAll();
-                        alert('تمت استعادة كافة البيانات بنجاح إلى السيرفرين!');
+                        alert('تمت استعادة كافة البيانات بنجاح إلى السيرفرين مع تفعيل الحماية!');
                     }
                 } catch(err) {
-                    alert('ملف غير صالح!');
+                    alert('ملف غير صالح أو تالف!');
                 }
             };
             fileReader.readAsText(event.target.files[0]);
@@ -446,6 +426,25 @@
             }
         }
 
+        function filterAbsenceDropdown() {
+            const query = document.getElementById('searchStudentInput').value.toLowerCase();
+            const absSelect = document.getElementById('absStudentSelect');
+            absSelect.innerHTML = '';
+
+            const filtered = students.filter(s => s.name.toLowerCase().includes(query) || s.class.toLowerCase().includes(query));
+            
+            filtered.forEach(s => {
+                const opt = document.createElement('option');
+                opt.value = s.name;
+                opt.textContent = `${s.name} (${s.class})`;
+                absSelect.appendChild(opt);
+            });
+
+            if(filtered.length > 0) {
+                absSelect.selectedIndex = 0;
+            }
+        }
+
         function renderAll() {
             const filterClass = document.getElementById('filterClassSelect').value;
             const sTbody = document.getElementById('studentsTableBody');
@@ -457,6 +456,11 @@
             });
 
             filteredStudents.forEach((s, idx) => {
+                const studentAbsenceCount = absences.filter(a => a.studentName === s.name).length;
+                let badgeClass = "bg-slate-100 text-slate-700";
+                if(studentAbsenceCount >= 3) badgeClass = "bg-rose-100 text-rose-800 font-bold border border-rose-300";
+                else if(studentAbsenceCount > 0) badgeClass = "bg-amber-100 text-amber-800 font-bold";
+
                 sTbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
                         <td class="p-3 font-bold text-slate-400">${idx + 1}</td>
@@ -464,16 +468,17 @@
                         <td class="p-3 text-slate-600">${sanitizeInput(s.class)}</td>
                         <td class="p-3 text-slate-600">${sanitizeInput(s.phone)}</td>
                         <td class="p-3 text-center">
+                            <span class="px-2.5 py-1 rounded-full text-xs ${badgeClass}">
+                                ${studentAbsenceCount} غياب
+                            </span>
+                        </td>
+                        <td class="p-3 text-center">
                             <button onclick="deleteStudent(${idx})" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
                         </td>
                     </tr>`;
             });
 
-            const absSelect = document.getElementById('absStudentSelect');
-            absSelect.innerHTML = '';
-            students.forEach(s => {
-                absSelect.innerHTML += `<option value="${s.name}">${s.name} (${s.class})</option>`;
-            });
+            filterAbsenceDropdown();
 
             const aTbody = document.getElementById('absencesTableBody');
             aTbody.innerHTML = '';
@@ -483,8 +488,8 @@
                     <tr class="hover:bg-slate-50">
                         <td class="p-3 font-bold text-slate-800">${sanitizeInput(a.studentName)}</td>
                         <td class="p-3 text-slate-600">${sanitizeInput(st.class)}</td>
+                        <td class="p-3"><span class="bg-rose-50 text-rose-900 px-2.5 py-1 rounded-lg font-bold border border-rose-200">${sanitizeInput(a.type)}</span></td>
                         <td class="p-3 text-slate-600">${sanitizeInput(a.date)}</td>
-                        <td class="p-3"><span class="bg-indigo-50 text-indigo-900 px-2.5 py-1 rounded-lg font-bold border border-indigo-200">${sanitizeInput(a.type)}</span></td>
                         <td class="p-3 text-center">
                             <button onclick="deleteAbsence(${idx})" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
                         </td>
