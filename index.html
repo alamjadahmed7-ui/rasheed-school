@@ -27,21 +27,24 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة حظر المعلمين خارج أوقات الدوام الرسمي ونظام تتبع المطورين -->
-    <div id="weekendScreen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-6 text-center hidden">
-        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[90vh] overflow-y-auto">
-            <div class="text-indigo-600 text-5xl">
-                <i class="fa-solid fa-business-time"></i>
-            </div>
-            <h2 class="text-2xl font-black text-slate-900">انتهى أوقات الدوام الرسمي</h2>
-            <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                عذراً، نظام رصد الغياب مغلق خارج أوقات الدوام الرسمي (من الأحد للخميس من 7:00 ص إلى 2:30 ظهراً).<br>
-                <span class="text-indigo-700 font-black">مخصص للمطورين:</span> يمكنك تسجيل الدخول بالباسورد لإرسال تقرير التتبع والوقت.
-            </p>
+    <!-- شاشة حظر الدوام ونظام تتبع الحركات والتطوير للمطورين -->
+    <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
+        <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[92vh] overflow-y-auto text-right">
             
-            <div class="pt-3 border-t space-y-3 text-right">
+            <div class="text-center space-y-2">
+                <div class="text-indigo-600 text-4xl inline-block bg-indigo-50 p-3 rounded-2xl">
+                    <i class="fa-solid fa-business-time"></i>
+                </div>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">انتهى أوقات الدوام الرسمي</h2>
+                <p class="text-slate-600 text-xs font-bold leading-relaxed">
+                    النظام مغلق حالياً خارج أوقات الدوام (من الأحد للخميس: 7:00 ص إلى 2:30 ظهراً).<br>
+                    <span class="text-indigo-700 font-black">خاص بالمطورين:</span> سجل الدخول بالكلمة السرية لإرسال تقرير التتبع.
+                </p>
+            </div>
+            
+            <div class="pt-3 border-t space-y-3">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">اختر اسم المطور:</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
                     <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
                         <option value="أمجد البلوشي (@just_majjod)">أمجد البلوشي (@just_majjod)</option>
                         <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
@@ -50,44 +53,44 @@
 
                 <div class="grid grid-cols-2 gap-2">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">وقت البدء:</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">وقت البدء:</label>
                         <input type="time" id="devStartTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-600 mb-1">وقت الانتهاء:</label>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">وقت الانتهاء:</label>
                         <input type="time" id="devEndTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
                     </div>
                 </div>
                 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">الصفحات التي تم تعديلها وتطويرها:</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الصفحات المعدلة:</label>
                     <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border">
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="إدارة وقوائم الطلاب" class="rounded"> إدارة الطلاب</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="نظام رصد الغياب والبحث" class="rounded"> رصد الغياب</label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="رصد الغياب والبحث" class="rounded"> رصد الغياب</label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="تقارير الإدارة الرسمية" class="rounded"> تقارير الإدارة</label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="نظام السيرفرين والحفظ" class="rounded"> السيرفرين والحفظ</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="واجهة المطورين والإنستجرام" class="rounded"> صفحة المطورين</label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="صفحة المطورين والإنستجرام" class="rounded"> صفحة المطورين</label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="أكواد الحماية والأمان" class="rounded"> الحماية والأمان</label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">الميزات الجديدة التي تم إضافتها:</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">الميزات الجديدة المضافة:</label>
                     <div class="space-y-1.5 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border">
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="تفعيل بوت الـ WhatsApp (Green API)" class="rounded"> تفعيل بوت الـ WhatsApp (Green API)</label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="تفعيل بوت الواتساب (Green API)" class="rounded"> تفعيل بوت الواتساب (Green API)</label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="نظام التتبع الزمني وحركات المطورين" class="rounded"> نظام التتبع الزمني وحركات المطورين</label>
-                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="المؤقت الآلي وتصفير السجلات اليومية" class="rounded"> المؤقت الآلي وتصفير السجلات</label>
+                        <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="المؤقت الآلي وتصفير السجلات" class="rounded"> المؤقت الآلي وتصفير السجلات</label>
                         <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devFeat" value="شاشة الحظر والإغلاق التلقائي 2:30" class="rounded"> شاشة الحظر والإغلاق التلقائي</label>
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-semibold text-slate-600 mb-1">كلمة المرور السرية للمطورين:</label>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية للمطورين:</label>
                     <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                 </div>
 
                 <button onclick="verifyDeveloperAccess()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
-                    🚀 إرسال تقرير التتبع الشامل للواتساب والدخول
+                    🚀 إرسال تقرير التتبع والدخول للنظام
                 </button>
             </div>
         </div>
@@ -105,7 +108,7 @@
                         <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rasheed-school-1.onrender.com</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي (@digi5core)[span_0](start_span)[span_0](end_span) & أمجد البلوشي (@just_majjod)[span_1](start_span)[span_1](end_span)</p>
+                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
                 </div>
             </div>
 
@@ -370,9 +373,9 @@
                     <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
                         <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
                         <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
-                        <p class="text-xs text-slate-500">معلم تقنية المعلومات[span_2](start_span)[span_2](end_span)</p>
+                        <p class="text-xs text-slate-500">معلم تقنية المعلومات</p>
                         <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                            <i class="fa-brands fa-instagram"></i> @digi5core[span_3](start_span)[span_3](end_span)
+                            <i class="fa-brands fa-instagram"></i> @digi5core
                         </a>
                     </div>
                     <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
@@ -380,7 +383,7 @@
                         <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
                         <p class="text-xs text-slate-500">برمجة السيرفرات والبوت والربط</p>
                         <a href="https://instagram.com/just_majjod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                            <i class="fa-brands fa-instagram"></i> @just_majjod[span_4](start_span)[span_4](end_span)
+                            <i class="fa-brands fa-instagram"></i> @just_majjod
                         </a>
                     </div>
                 </div>
@@ -403,7 +406,7 @@
         // رقمك الخاص لاستقبال تقارير التتبع الزمني والحركات
         const DEV_NOTIFY_PHONE = '96892033413'; 
 
-        // نظام الحظر الزمني الجديد (الدوام: الأحد إلى الخميس من 7:00 ص إلى 2:30 ظهراً)
+        // نظام الحظر الزمني للدوام (من الأحد للخميس: 7:00 ص إلى 2:30 ظهراً)
         const now = new Date();
         const dayIndex = now.getDay(); // 0 الأحد إلى 6 السبت
         const currentHour = now.getHours();
@@ -433,12 +436,10 @@
             const startTime = document.getElementById('devStartTime').value;
             const endTime = document.getElementById('devEndTime').value;
             
-            // جمع الصفحات التي تم اختيار تعديلها
             const pageCheckboxes = document.querySelectorAll('input[name="devPage"]:checked');
             let modifiedPages = [];
             pageCheckboxes.forEach((cb) => { modifiedPages.push(cb.value); });
 
-            // جمع الميزات التي تم إضافتها
             const featCheckboxes = document.querySelectorAll('input[name="devFeat"]:checked');
             let addedFeatures = [];
             featCheckboxes.forEach((cb) => { addedFeatures.push(cb.value); });
@@ -457,7 +458,6 @@
                 document.getElementById('weekendScreen').classList.add('hidden');
                 alert(`أهلاً بك يا ${devName}، تم اعتماد التقرير وإرسال تفاصيل التتبع بنجاح!`);
 
-                // إرسال تقرير الحركات والتتبع الشامل عبر Green API إلى رقمك
                 try {
                     let notifyPhone = DEV_NOTIFY_PHONE.replace(/[^0-9]/g, '');
                     if(!notifyPhone.startsWith('968') && notifyPhone.length === 8) {
@@ -547,7 +547,6 @@
             alert('تمت إضافة الطالب وحفظه بنجاح وتأمينه!');
         });
 
-        // رصد الغياب وإرسال التنبيهات عبر Green API لأرقام أولياء الأمور
         document.getElementById('absenceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const sName = document.getElementById('absStudentSelect').value;
@@ -723,11 +722,11 @@
 
             filterAbsenceDropdown();
 
-            _tBody = document.getElementById('absencesTableBody');
-            _tBody.innerHTML = '';
+            const aTbody = document.getElementById('absencesTableBody');
+            aTbody.innerHTML = '';
             absences.forEach((a, idx) => {
                 const st = students.find(s => s.name === a.studentName) || { class: '-' };
-                _tBody.innerHTML += `
+                aTbody.innerHTML += `
                     <tr class="hover:bg-slate-50">
                         <td class="p-3 font-bold text-slate-800">${sanitizeInput(a.studentName)}</td>
                         <td class="p-3 text-slate-600">${sanitizeInput(st.class)}</td>
