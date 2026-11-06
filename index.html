@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة التحقق وأوقات الدوام (الجمعة والسبت مغلق طوال اليوم، الأحد-الخميس مفتوح، الخميس يقفل 2:30 ظهراً) -->
+    <!-- شاشة التحقق للمطورين (متاحة لدخول أمجد وعبد الرحمن للتطوير والتعديل في أي وقت) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-sky-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
@@ -125,7 +125,7 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">آمن ومؤمن</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">وضع التطوير</span>
                     </div>
                 </div>
             </div>
@@ -371,34 +371,12 @@
         const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedTelegramOTP = "";
 
-        // فحص الدوام بدقة: الجمعة والسبت مغلق طوال اليوم، الأحد إلى الخميس مفتوح، الخميس يقفل الساعة 2:30 ظهراً
+        // فحص الدوام: متاح دائماً لدخول المطورين (أمجد وعبد الرحمن) عبر بوت التليجرام وكلمة المرور
         function checkSchoolSchedule() {
-            const now = new Date();
-            const dayOfWeek = now.getDay(); // 0: الأحد، 1: الإثنين، 2: الثلاثاء، 3: الأربعاء، 4: الخميس، 5: الجمعة، 6: السبت
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const currentTimeVal = hours * 60 + minutes;
-            const closeTimeVal = 14 * 60 + 30; // 2:30 ظهراً
-
-            let isOutsideWorkingHours = false;
-            let statusText = "";
-
-            if (dayOfWeek === 5 || dayOfWeek === 6) {
-                isOutsideWorkingHours = true;
-                statusText = "عطلة نهاية الأسبوع (الجمعة والسبت) - النظام مغلق طوال اليوم.";
-            } else if (dayOfWeek === 4 && currentTimeVal > closeTimeVal) {
-                isOutsideWorkingHours = true;
-                statusText = "انتهى الدوام الرسمي (الخميس بعد الساعة 2:30 ظهراً) - النظام مغلق.";
-            }
-
-            if (isOutsideWorkingHours) {
-                document.getElementById('systemStatusMsg').textContent = statusText;
+            if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
                 document.getElementById('weekendScreen').classList.remove('hidden');
-                document.getElementById('stepOneDevAuth').classList.add('hidden');
             } else {
-                if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
-                    document.getElementById('weekendScreen').classList.remove('hidden');
-                }
+                document.getElementById('weekendScreen').classList.add('hidden');
             }
         }
 
@@ -430,10 +408,10 @@
                         document.getElementById('inputAmjadId').value = foundChatId;
                         alert('تم استخراج Chat ID بنجاح بدقة: ' + foundChatId);
                     } else {
-                        alert('تنبيه: أرسل رسالة للبوت @RashedSchoolAuth_bot في تليجرام أولاً ثم اضغط جلب.');
+                        alert('تنبيه: أرسل رسالة للبوت الصحيح في تليجرام أولاً ثم اضغط جلب.');
                     }
                 } else {
-                    alert('لا توجد تحديثات حالية. أرسل رسالة للبوت @RashedSchoolAuth_bot ثم أعد المحاولة.');
+                    alert('لا توجد تحديثات حالية. أرسل رسالة للبوت ثم أعد المحاولة.');
                 }
             } catch (err) {
                 console.error("Fetch ID Error:", err);
@@ -483,7 +461,7 @@
 
             document.getElementById('stepOneDevAuth').classList.add('hidden');
             document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-            alert('تم إرسال رمز التحقق عبر بوت @RashedSchoolAuth_bot بنجاح!');
+            alert('تم إرسال رمز التحقق عبر تليجرام بنجاح!');
         }
 
         function verifyTelegramOTP() {
@@ -493,7 +471,7 @@
             if (otpInput === generatedTelegramOTP && generatedTelegramOTP !== "") {
                 sessionStorage.setItem('dev_authenticated_once', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح واستكمال الدخول!`);
+                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح واستكمال الدخول للتطوير!`);
             } else {
                 alert('رمز التحقق غير صحيح.');
             }
@@ -507,11 +485,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v24_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v24_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v25_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v25_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v24_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v25_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -603,8 +581,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v24_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v24_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v25_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v25_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
