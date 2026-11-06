@@ -367,6 +367,8 @@
     <script>
         const ENCRYPTED_PASS = "amjad2026";
         const TELEGRAM_BOT_TOKEN = "9033347038:AAH2xsTD6u0hwpVTIJR9Gp3R2YZsRTJyOdI";
+        const GREEN_API_ID = "410022793570";
+        const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedTelegramOTP = "";
 
         // فحص الدوام بدقة: الجمعة والسبت مغلق طوال اليوم، الأحد إلى الخميس مفتوح، الخميس يقفل الساعة 2:30 ظهراً
@@ -381,13 +383,10 @@
             let isOutsideWorkingHours = false;
             let statusText = "";
 
-            // الجمعة (5) والسبت (6) مغلق طوال اليوم
             if (dayOfWeek === 5 || dayOfWeek === 6) {
                 isOutsideWorkingHours = true;
                 statusText = "عطلة نهاية الأسبوع (الجمعة والسبت) - النظام مغلق طوال اليوم.";
-            } 
-            // يوم الخميس (4) بعد الساعة 2:30 ظهراً يقفل
-            else if (dayOfWeek === 4 && currentTimeVal > closeTimeVal) {
+            } else if (dayOfWeek === 4 && currentTimeVal > closeTimeVal) {
                 isOutsideWorkingHours = true;
                 statusText = "انتهى الدوام الرسمي (الخميس بعد الساعة 2:30 ظهراً) - النظام مغلق.";
             }
@@ -508,11 +507,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v22_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v22_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v24_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v24_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v22_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v24_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -574,7 +573,7 @@
                 const chatId = `${phone}@c.us`;
 
                 try {
-                    await fetch(`https://7107.api.greenapi.com/waInstance710722792988/sendMessage/76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7`, {
+                    await fetch(`https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chatId: chatId, message: msgContent })
@@ -604,8 +603,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v22_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v22_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v24_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v24_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
