@@ -79,7 +79,7 @@
             </button>
         </div>
 
-        <!-- ================= تبويب 1: إدارة الطلاب (فارغ جاهز ليوم الأحد) ================= -->
+        <!-- ================= تبويب 1: إدارة الطلاب ================= -->
         <div id="tabStudents" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -149,7 +149,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 2: رصد الغياب (بحث سريع للمعلم مع بوت واتساب) ================= -->
+        <!-- ================= تبويب 2: رصد الغياب (بحث سريع + رقم الحصة + بوت واتساب) ================= -->
         <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -161,8 +161,25 @@
                         <input type="text" id="searchStudentInput" placeholder="اكتب للبحث السريع..." oninput="filterAbsenceDropdown()" class="w-full p-2.5 mb-2 border rounded-xl bg-indigo-50/50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                         <select id="absStudentSelect" size="4" required class="w-full p-2 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-xs"></select>
                     </div>
+
+                    <!-- تم إعادة إضافة اختيار رقم الحصة هنا بدقة -->
                     <div>
-                        <label class="block mb-1 text-slate-600">الحالة:</label>
+                        <label class="block mb-1 text-indigo-900 font-black">📌 حدد رقم الحصة الدراسية:</label>
+                        <select id="absLesson" required class="w-full p-2.5 border-2 border-indigo-400 rounded-xl bg-indigo-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-indigo-950">
+                            <option value="الحصة الأولى">الحصة الأولى (1)</option>
+                            <option value="الحصة الثانية">الحصة الثانية (2)</option>
+                            <option value="الحصة الثالثة">الحصة الثالثة (3)</option>
+                            <option value="الحصة الرابعة">الحصة الرابعة (4)</option>
+                            <option value="الحصة الخامسة">الحصة الخامسة (5)</option>
+                            <option value="الحصة السادسة">الحصة السادسة (6)</option>
+                            <option value="الحصة السابعة">الحصة السابعة (7)</option>
+                            <option value="الحصة الثامنة">الحصة الثامنة (8)</option>
+                            <option value="اليوم كامل">كامل اليوم الدراسي (عام)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block mb-1 text-slate-600 font-black">الحالة:</label>
                         <select id="absType" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-rose-700">
                             <option value="غائب عن الحصة">🔴 غائب عن الحصة</option>
                             <option value="متأخر عن الحصة">🟡 متأخر عن الحصة</option>
@@ -187,7 +204,7 @@
                             <tr>
                                 <th class="p-3">اسم الطالب</th>
                                 <th class="p-3">الصف والشعبة</th>
-                                <th class="p-3">الحالة المسجلة</th>
+                                <th class="p-3">الحصة والحالة المسجلة</th>
                                 <th class="p-3">التاريخ</th>
                                 <th class="p-3 text-center">حذف</th>
                             </tr>
@@ -323,14 +340,16 @@
                 return;
             }
             const student = students.find(s => s.name === sName);
+            const lesson = document.getElementById('absLesson').value;
             const type = document.getElementById('absType').value;
+            const finalRecordStr = `${type} (${lesson})`;
 
-            absences.push({ studentName: sanitizeInput(sName), date: todayStr, type: sanitizeInput(type) });
+            absences.push({ studentName: sanitizeInput(sName), date: todayStr, type: sanitizeInput(finalRecordStr) });
             saveToLocalServer();
 
             if(student) {
                 let msgContent = `🤖 *[إشعار متابعة - مدرسة راشد بن الوليد]*\n\n` +
-                                 `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) بتاريخ ${todayStr}.\n\n` +
+                                 `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) خلال (*${lesson}*) بتاريخ ${todayStr}.\n\n` +
                                  `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
                 let phone = student.phone.replace(/[^0-9]/g, '');
