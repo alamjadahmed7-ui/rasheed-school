@@ -27,6 +27,23 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
+    <!-- شاشة الحظر الخاصة بأيام الويكند (الخميس، الجمعة، السبت) -->
+    <div id="weekendScreen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-6 text-center hidden">
+        <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-4 border-t-8 border-amber-500">
+            <div class="text-amber-500 text-5xl">
+                <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2 class="text-2xl font-black text-slate-900">عذراً، الموقع مغلق مؤقتاً</h2>
+            <p class="text-slate-600 text-sm font-bold leading-relaxed">
+                جاري تطوير الموقع، يرجى الانتظار.<br>
+                (عطلة نهاية الأسبوع: الخميس، الجمعة، والسبت)
+            </p>
+            <div class="bg-amber-50 text-amber-800 p-3 rounded-xl text-xs font-mono font-bold">
+                🔒 النظام يعود للعمل تلقائياً يوم الأحد القادم
+            </div>
+        </div>
+    </div>
+
     <header class="glass-header text-white shadow-2xl border-b-4 border-amber-400">
         <div class="max-w-7xl mx-auto p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-5">
@@ -53,8 +70,8 @@
                     <span id="statAbsences" class="text-2xl font-black text-rose-400">0</span>
                 </div>
                 <div class="bg-white/10 backdrop-blur-md p-3 px-4 rounded-2xl border border-white/10 text-center">
-                    <span class="block text-xs text-indigo-200">حماية السيرفرين</span>
-                    <span class="text-xs font-bold text-emerald-300 block mt-2">🛡️ Secured & Active</span>
+                    <span class="block text-xs text-indigo-200">المؤقت الآلي</span>
+                    <span id="timerBadge" class="text-xs font-bold text-emerald-300 block mt-2">⏱️ 24 ساعة نشط</span>
                 </div>
             </div>
         </div>
@@ -102,7 +119,6 @@
                     </div>
                     <div>
                         <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (للبوت):</label>
-                        <!-- تم إزالة الرقم الافتراضي لتتمكن من كتابة أي رقم حرية تامة -->
                         <input type="text" id="newParentPhone" required placeholder="مثال: 968xxxxxxxx" class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500">
                     </div>
                     <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold shadow transition">
@@ -148,7 +164,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 2: رصد الغياب ================= -->
+        <!-- ================= تبويب 2: رصد الغياب (مع زر تفريغ سجل الغياب) ================= -->
         <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -195,9 +211,15 @@
             </div>
 
             <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex justify-between items-center border-b pb-3">
+                <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
                     <h3 class="font-bold text-slate-800">📊 سجل الحالات والغياب المسجلة اليوم</h3>
-                    <span id="currentDateBadge" class="bg-slate-100 text-slate-700 font-mono text-xs px-3 py-1 rounded-lg font-bold"></span>
+                    <div class="flex items-center gap-3">
+                        <!-- زر تفريغ سجل الغياب -->
+                        <button onclick="clearAbsencesRecords()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold px-3 py-1.5 rounded-xl text-xs transition border border-rose-200">
+                            <i class="fa-solid fa-trash-can"></i> تفريغ سجل الغياب
+                        </button>
+                        <span id="currentDateBadge" class="bg-slate-100 text-slate-700 font-mono text-xs px-3 py-1 rounded-lg font-bold"></span>
+                    </div>
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-right text-xs">
@@ -240,7 +262,7 @@
                     <p class="text-xs text-slate-600 leading-relaxed">
                         الأستاذ عادل المحترم،<br>
                         إجمالي حالات الغياب المسجلة لليوم بجميع الشعب من 1 إلى 8 هو (<strong id="repTotalAbsences">0</strong> حالة).<br>
-                        خاصية التصفير اليومي الآلي والسيرفرين مفعلة بنجاح مع أمان تام.
+                        خاصية التصفير اليومي الآلي (مؤقت 24 ساعة) والحماية مفعلة بنجاح.
                     </p>
                 </div>
             </div>
@@ -258,7 +280,7 @@
                         <h4 class="font-bold text-indigo-950 text-sm">🌐 Server 1: السيرفر المحلي (Local Server)</h4>
                         <span class="bg-emerald-100 text-emerald-800 text-xs px-2.5 py-0.5 rounded-full font-bold">متصل وآمن</span>
                     </div>
-                    <p class="text-xs text-slate-600">يقوم بتخزين كافة بيانات الطلاب وسجلات الغياب وتحديث التصفير الآلي على متصفحك تلقائياً دون انقطاع.</p>
+                    <p class="text-xs text-slate-600">يقوم بتخزين كافة بيانات الطلاب وسجلات الغياب وتحديث التصفير الآلي عبر مؤقت 24 ساعة.</p>
                     <button onclick="saveToLocalServer()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-2.5 rounded-xl font-bold text-xs transition">
                         💾 مزامنة وحفظ فورية على Server 1
                     </button>
@@ -286,6 +308,13 @@
     </div>
 
     <script>
+        // التحقق من أيام الويكند (الخميس: 4، الجمعة: 5، السبت: 6) وحظر الدخول
+        const currentDayIndex = new Date().getDay(); // 0 الأحد إلى 6 السبت
+        // الخميس (4) والجمعة (5) والسبت (6)
+        if (currentDayIndex === 4 || currentDayIndex === 5 || currentDayIndex === 6) {
+            document.getElementById('weekendScreen').classList.remove('hidden');
+        }
+
         const ID_INSTANCE = '710722792988';
         const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
 
@@ -294,12 +323,24 @@
 
         let students = JSON.parse(localStorage.getItem('rashid_v18_students')) || [];
         
+        // نظام التصفير الآلي اليومي مع مؤقت 24 ساعة
         let savedData = JSON.parse(localStorage.getItem('rashid_v18_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
             localStorage.setItem('rashid_v18_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
+
+        // مؤقت يتحقق كل دقيقة من تغير اليوم (مرور 24 ساعة) لتصفير السجلات تلقائياً
+        setInterval(() => {
+            const liveDateStr = new Date().toISOString().split('T')[0];
+            if (liveDateStr !== savedData.date) {
+                savedData = { date: liveDateStr, records: [] };
+                absences = [];
+                localStorage.setItem('rashid_v18_absences_data', JSON.stringify(savedData));
+                renderAll();
+            }
+        }, 60000);
 
         function sanitizeInput(str) {
             if (!str) return '';
@@ -384,6 +425,15 @@
         function clearAllStudents() {
             if(confirm('هل تريد تفريغ القائمة بالكامل؟')) {
                 students = [];
+                saveToLocalServer();
+                renderAll();
+            }
+        }
+
+        // دالة تفريغ سجل الغياب فقط
+        function clearAbsencesRecords() {
+            if(confirm('هل تريد تفريغ ومسح سجل غياب اليوم بالكامل؟')) {
+                absences = [];
                 saveToLocalServer();
                 renderAll();
             }
