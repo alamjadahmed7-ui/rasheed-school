@@ -17,7 +17,7 @@
 </head>
 <body>
 
-    <!-- أزرار التنقل الرئيسية العلويّة (نفس تصميمك الأصلي) -->
+    <!-- الأزرار العلوية حسب تصميمك الأصلي الدقيق -->
     <div class="main-nav">
         <div class="container d-flex justify-content-center flex-wrap gap-2">
             <button class="btn btn-purple nav-btn"><i class="fas fa-users me-1"></i> إدارة وقوائم الطلاب</button>
@@ -29,11 +29,43 @@
 
     <div class="container">
         <div class="row">
-            <!-- قائمة الطلاب -->
+            <!-- نموذج إضافة طالب جديد (في اليمين) -->
+            <div class="col-md-4 mb-3">
+                <div class="card card-custom p-4">
+                    <h5 class="fw-bold mb-3"><i class="fas fa-user-plus me-1"></i> إضافة طالب جديد للقائمة</h5>
+                    <form id="studentForm">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">اسم الطالب الثلاثي والقبيلة:</label>
+                            <input type="text" id="studentName" class="form-control" placeholder="أدخل اسم الطالب..." required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">الصف والشعبة (من 1 إلى 8):</label>
+                            <select id="studentClass" class="form-select" required>
+                                <option value="العاشر / 1">العاشر / 1</option>
+                                <option value="العاشر / 2">العاشر / 2</option>
+                                <option value="العاشر / 3">العاشر / 3</option>
+                                <option value="العاشر / 4">العاشر / 4</option>
+                                <option value="العاشر / 5">العاشر / 5</option>
+                                <option value="العاشر / 6">العاشر / 6</option>
+                                <option value="العاشر / 7">العاشر / 7</option>
+                                <option value="العاشر / 8">العاشر / 8</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">رقم هاتف ولي الأمر (للبوت):</label>
+                            <input type="tel" id="parentPhone" class="form-control" placeholder="92033413" required>
+                        </div>
+                        <button type="submit" class="btn btn-purple w-100 fw-bold py-2 mb-2">حفظ الطالب في القائمة</button>
+                        <button type="button" class="btn btn-outline-danger w-100 btn-sm" onclick="clearAllStudents()">تفريغ القائمة بالكامل</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- قوائم الطلاب المسجلين (في اليسار) -->
             <div class="col-md-8 mb-3">
                 <div class="card card-custom p-4">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <h5 class="fw-bold m-0">📋 قوائم الطلاب المسجلين حالياً</h5>
+                    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+                        <h5 class="fw-bold m-0"><i class="fas fa-clipboard-list text-primary me-2"></i> قوائم الطلاب المسجلين حالياً</h5>
                         <div class="d-flex align-items-center gap-2">
                             <span class="badge bg-primary rounded-pill px-3 py-2" id="studentCount">0 طالب</span>
                             <select id="filterClass" class="form-select form-select-sm" onchange="renderStudents()" style="width: auto;">
@@ -68,42 +100,11 @@
                     </div>
                 </div>
             </div>
-
-            <!-- إضافة طالب جديد -->
-            <div class="col-md-4 mb-3">
-                <div class="card card-custom p-4">
-                    <h5 class="fw-bold mb-3 text-purple"><i class="fas fa-user-plus me-1"></i> إضافة طالب جديد للقائمة</h5>
-                    <form id="studentForm">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">اسم الطالب الثلاثي والقبيلة:</label>
-                            <input type="text" id="studentName" class="form-control" placeholder="أدخل اسم الطالب..." required>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">الصف والشعبة (من 1 إلى 8):</label>
-                            <select id="studentClass" class="form-select" required>
-                                <option value="العاشر / 1">العاشر / 1</option>
-                                <option value="العاشر / 2">العاشر / 2</option>
-                                <option value="العاشر / 3">العاشر / 3</option>
-                                <option value="العاشر / 4">العاشر / 4</option>
-                                <option value="العاشر / 5">العاشر / 5</option>
-                                <option value="العاشر / 6">العاشر / 6</option>
-                                <option value="العاشر / 7">العاشر / 7</option>
-                                <option value="العاشر / 8">العاشر / 8</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">رقم هاتف ولي الأمر (للبوت):</label>
-                            <input type="tel" id="parentPhone" class="form-control" placeholder="92033413" required>
-                        </div>
-                        <button type="submit" class="btn btn-purple w-100 fw-bold py-2 mb-2">حفظ الطالب في القائمة</button>
-                        <button type="button" class="btn btn-outline-danger w-100 btn-sm" onclick="clearAllStudents()">تفريغ القائمة بالكامل</button>
-                    </form>
-                </div>
-            </div>
         </div>
     </div>
 
     <script>
+        // بيانات Green API المربوطة بحسابك
         const ID_INSTANCE = '710722792988';
         const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
 
@@ -171,6 +172,7 @@
             }
         }
 
+        // دالة إرسال رسالة الواتساب التلقائية عبر Green API
         async function sendAbsentNotice(index) {
             const student = students[index];
             const chatId = `${student.phone}@c.us`;
