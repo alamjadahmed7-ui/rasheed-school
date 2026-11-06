@@ -5,9 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>نظام إدارة الغياب - مدرسة راشد بن الوليد للبنين (10-12)</title>
     
-    <meta name="description" content="النظام الرسمي المعتمد لرصد غياب الطلاب والحصص الدراسية في مدرسة راشد بن الوليد للبنين.">
-    <meta name="keywords" content="نظام إدارة الغياب, مدرسة راشد بن الوليد, سلطنة عُمان">
-    
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -20,28 +17,48 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة تسجيل دخول المطور ونظام التحقق (ترسل الرمز مرة واحدة فقط) -->
+    <!-- شاشة تسجيل دخول المطور ونظام استخراج الآديات والـ OTP -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
-        <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[92vh] overflow-y-auto text-right">
+        <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-sky-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
-                <div class="text-indigo-600 text-4xl inline-block bg-indigo-50 p-3 rounded-2xl">
-                    <i class="fa-solid fa-shield-halved"></i>
+                <div class="text-sky-500 text-5xl inline-block bg-sky-50 p-3 rounded-2xl">
+                    <i class="fa-brands fa-telegram"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام التحقق الآمن للمطورين</h2>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين - استخراج الآديات والـ OTP</h2>
                 <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                    يتم إرسال رمز التحقق (OTP) عبر رسالة نصية قصيرة (SMS) **مرة واحدة فقط** لحماية المنظومة.
+                    استخرج الـ Chat ID الخاص بك وأخيك تلقائياً، وأرسل رمز الـ OTP **مرة واحدة فقط** لتأمين الجلسة.
                 </p>
             </div>
             
             <div class="pt-3 border-t space-y-3">
-                <!-- الخطوة 1: إعدادات جلسة المطور وكلمة المرور -->
+                <!-- الخطوة 1: استخراج الآديات وإدخال كلمة المرور -->
                 <div id="stepOneDevAuth" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
-                        <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                        <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-sky-500">
                             <option value="أمجد البلوشي (@just_majod)">أمجد البلوشي (@just_majod)</option>
                             <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
                         </select>
+                    </div>
+
+                    <!-- نظام استخراج الآديات التلقائي -->
+                    <div class="bg-sky-50 p-3 rounded-2xl border border-sky-200 space-y-2">
+                        <div class="flex justify-between items-center">
+                            <span class="text-xs font-bold text-sky-900">🔍 استخراج Chat ID من البوت:</span>
+                            <button onclick="fetchTelegramChatIds()" type="button" class="bg-sky-600 hover:bg-sky-700 text-white text-[11px] px-3 py-1.5 rounded-xl font-bold transition shadow">
+                                جلب الآديات تلقائياً
+                            </button>
+                        </div>
+                        <div class="grid grid-cols-2 gap-2 pt-1">
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-600 mb-1">معرف أمجد:</label>
+                                <input type="text" id="inputAmjadId" placeholder="اضغط جلب..." class="w-full p-2 border rounded-xl text-xs bg-white font-bold outline-none">
+                            </div>
+                            <div>
+                                <label class="block text-[10px] font-bold text-slate-600 mb-1">معرف عبد الرحمن:</label>
+                                <input type="text" id="inputBrotherId" placeholder="اضغط جلب..." class="w-full p-2 border rounded-xl text-xs bg-white font-bold outline-none">
+                            </div>
+                        </div>
                     </div>
 
                     <div class="grid grid-cols-2 gap-2">
@@ -54,37 +71,27 @@
                             <input type="time" id="devEndTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
                         </div>
                     </div>
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">الصفحات المعدلة:</label>
-                        <div class="grid grid-cols-2 gap-2 text-xs font-bold text-slate-700 bg-slate-50 p-3 rounded-xl border">
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="إدارة وقوائم الطلاب" class="rounded"> إدارة الطلاب</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="رصد الغياب والبحث" class="rounded"> رصد الغياب</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="لوحة الإدارة والتقارير" class="rounded"> لوحة الإدارة</label>
-                            <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox" name="devPage" value="صفحة المطورين وحسابات الإنستجرام" class="rounded"> صفحة المطورين</label>
-                        </div>
-                    </div>
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية:</label>
-                        <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور المخفية..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-sky-500 font-bold">
                     </div>
 
-                    <button onclick="requestInfobipOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
-                        🚀 إرسال رمز التحقق عبر Infobip SMS (مرة واحدة)
+                    <button onclick="requestTelegramOTP()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-3 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2">
+                        <i class="fa-paper-plane fa-solid"></i> إرسال رمز التحقق (مرة واحدة فقط)
                     </button>
                 </div>
 
-                <!-- الخطوة 2: إدخال الرمز للتحقق لمرة واحدة والدخول التلقائي لاحقاً -->
-                <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-indigo-50/50 p-4 rounded-2xl border border-indigo-200">
-                    <div class="text-center space-y-2">
-                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق الحقيقي بنجاح إلى هاتفك. بعد التحقق الناجح، لن تحتاج لإعادة إدخال الرمز مجدداً في هذه الجلسة.</span>
+                <!-- الخطوة 2: إدخال الرمز واستكمال الدخول -->
+                <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-sky-50/50 p-4 rounded-2xl border border-sky-200">
+                    <div class="text-center space-y-1">
+                        <span class="text-xs text-sky-900 font-bold block">تم إرسال الرمز لتليجرام بنجاح! (ولن يُطلب مجدداً في هذه الجلسة).</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (PIN):</label>
-                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز المستلم..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (OTP):</label>
+                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز المكون من 6 أرقام..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-sky-500 bg-white">
                     </div>
-                    <button onclick="verifyInfobipOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
+                    <button onclick="verifyTelegramOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
                         ✅ تأكيد الرمز والدخول الدائم للجلسة
                     </button>
                     <button onclick="resetAuthStep()" class="w-full text-slate-500 text-xs font-bold py-1 hover:underline">
@@ -288,7 +295,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 3: لوحة الإدارة والتقارير الخاصة ================= -->
+        <!-- ================= تبويب 3: لوحة الإدارة ================= -->
         <div id="tabAdministration" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden">
             <div class="border-b pb-4 flex items-center justify-between">
                 <div>
@@ -309,8 +316,7 @@
                     </div>
                     <h4 class="font-bold text-lg text-amber-300">سعادة الأستاذ / سعيد</h4>
                     <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        تقرير المتابعة الموجه إلى مدير المدرسة:<br><br>
-                        يتم رصد وحصر كافة حالات غياب الطلاب وتأخرهم بشكل يومي وأوتوماتيكي. إجمالي قيد المدرسة الحالي هو (<strong class="text-amber-300" id="adminTotalStudents">0</strong>) طالب. النظام يعمل وفق اللوائح المعتمدة.
+                        إجمالي قيد المدرسة الحالي هو (<strong class="text-amber-300" id="adminTotalStudents">0</strong>) طالب.
                     </p>
                 </div>
 
@@ -321,8 +327,7 @@
                     </div>
                     <h4 class="font-bold text-lg text-indigo-200">الفاضل الأستاذ / عادل</h4>
                     <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        تقرير المتابعة الموجه إلى نائب المدير:<br><br>
-                        تم ضبط النظام ليعمل بكفاءة عالية، مع تفعيل خاصية التنبيه الفوري لأولياء الأمور. بلغ إجمالي سجلات الحالات المرصودة لليوم (<strong class="text-indigo-300" id="adminTotalAbsences">0</strong>) حالة مسجلة بدقة.
+                        إجمالي سجلات الغياب المرصودة اليوم هو (<strong class="text-indigo-300" id="adminTotalAbsences">0</strong>) حالة.
                     </p>
                 </div>
 
@@ -333,41 +338,30 @@
                     </div>
                     <h4 class="font-bold text-lg text-emerald-300">الأستاذ / ناصر</h4>
                     <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        تقرير المتابعة الموجه للأخصائي الاجتماعي:<br><br>
-                        المنظومة تتيح لكم متابعة حالات السلوك والغياب والهروب أولاً بأول. تم التدقيق في الحالات المسجلة لضمان التدخل التربوي السريع والتواصل مع الأسر حسب مقتضيات المصلحة التعليمية.
+                        تم التدقيق في كافة الحالات المسجلة لضمان التدخل التربوي السريع.
                     </p>
                 </div>
             </div>
-            
-            <div class="bg-slate-50 p-4 rounded-xl border border-slate-200 flex items-center justify-between text-xs text-slate-600">
-                <span class="flex items-center gap-2 font-bold"><i class="fa-solid fa-shield-halved text-emerald-600"></i> نظام التوثيق الإلكتروني الآمن - مدرسة راشد بن الوليد</span>
-                <span class="font-mono">rashed-bin-alwaleed.co</span>
-            </div>
         </div>
 
-        <!-- ================= تبويب 4: صفحة المطورين وحسابات الإنستجرام ================= -->
+        <!-- ================= تبويب 4: صفحة المطورين ================= -->
         <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
             <div class="max-w-xl mx-auto space-y-4">
-                <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
-                    <i class="fa-solid fa-laptop-code"></i>
+                <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                    <i class="fa-brands fa-telegram"></i>
                 </div>
                 <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية - قريات</h3>
-                <p class="text-slate-600 text-sm leading-relaxed">
-                    تم تصميم وبرمجة وتطوير نظام إدارة الغياب والتنبيه الآلي لمدرسة راشد بن الوليد للبنين بكل احترافية وإتقان لتسهيل العمل الإداري.
-                </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
                         <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
                         <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
-                        <p class="text-xs text-slate-500">معلم تقنية المعلومات</p>
                         <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
                             <i class="fa-brands fa-instagram"></i> @digi5core
                         </a>
                     </div>
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
                         <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
                         <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
-                        <p class="text-xs text-slate-500">برمجة السيرفرات والبوت والربط</p>
                         <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
                             <i class="fa-brands fa-instagram"></i> @just_majod
                         </a>
@@ -376,12 +370,8 @@
 
                 <div class="pt-4 border-t">
                     <button onclick="developerLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-6 py-3 rounded-xl text-xs font-bold transition shadow">
-                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج وإقفال جلسة المطور
+                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج المطور
                     </button>
-                </div>
-
-                <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs font-bold border border-emerald-200 mt-4">
-                    🟢 النظام مؤمن بالكامل عبر بوابة Infobip API وحماية إرسال الرمز لمرة واحدة فقط لتفادي الزحمة.
                 </div>
             </div>
         </div>
@@ -391,128 +381,124 @@
     <script>
         const ENCRYPTED_PASS = "amjad2026";
         
-        // إعدادات Infobip الحقيقية الخاصة بك (تأكد من وضع الـ Application ID الخاص بك هنا)
-        const INFOBIP_BASE_URL = "https://ndlwmj.api.infobip.com";
-        const INFOBIP_AUTH_KEY = "App faac47a9ac852645875e297662eb80a0-c4f54887-5269-4f1b-ac08-0e94fddc7742";
-        const APPLICATION_ID = "ضع_معرف_التطبيق_هنا"; // ضع الـ Application ID هنا
-        
-        const DEV_PHONE = '96892033413'; 
+        // ===== توكن البوت الثابت الخاص بك =====
+        const TELEGRAM_BOT_TOKEN = "8012345678:ABCdefGhIJKlmNoPQRsTUVwxyZ"; // ضع توكن بوتك الحقيقي هنا
 
-        let activePinId = "";
+        let generatedTelegramOTP = "";
 
-        // فحص ما إذا كان المطور قد سجل دخوله مسبقاً في هذه الجلسة (لمنع إرسال الرمز أكثر من مرة)
         if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
             document.getElementById('weekendScreen').classList.remove('hidden');
         }
 
         function developerLogout() {
             sessionStorage.removeItem('dev_authenticated_once');
-            alert('تم تسجيل خروج المطور وإقفال الجلسة بأمان!');
+            alert('تم تسجيل الخروج بأمان!');
             location.reload();
         }
 
-        async function sendInfobipSms(phoneNumber) {
-            let cleanPhone = phoneNumber.replace(/[^0-9]/g, '');
-            if(!cleanPhone.startsWith('968') && cleanPhone.length === 8) {
-                cleanPhone = '968' + cleanPhone;
+        // دالة جلب الآديات (Chat IDs) تلقائياً من تليجرام
+        async function fetchTelegramChatIds() {
+            if(!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes("8012345678")) {
+                alert('يرجى وضع توكن البوت الحقيقي (TELEGRAM_BOT_TOKEN) في كود الجافاسكريبت أولاً!');
+                return;
             }
+            
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                if(data.ok && data.result.length > 0) {
+                    // استخراج أحدث الآديات من الرسائل المرسلة للبوت
+                    const updates = data.result;
+                    let foundChatId = "";
+                    for(let i = updates.length - 1; i >= 0; i--) {
+                        if(updates[i].message && updates[i].message.chat) {
+                            foundChatId = updates[i].message.chat.id;
+                            break;
+                        }
+                    }
+                    
+                    if(foundChatId) {
+                        document.getElementById('inputAmjadId').value = foundChatId;
+                        alert('تم استخراج Chat ID بنجاح: ' + foundChatId);
+                    } else {
+                        alert('تنبيه: لم يتم العثور على رسائل واردة للبوت. أرسل أي رسالة للبوت في تليجرام ثم أعد المحاولة.');
+                    }
+                } else {
+                    alert('لا توجد تحديثات حديثة. أرسل رسالة للبوت في تليجرام أولاً ثم اضغط جلب.');
+                }
+            } catch (err) {
+                console.error("Fetch ID Error:", err);
+                alert('حدث خطأ أثناء جلب الـ ID، تأكد من اتصال الإنترنت وصحة التوكن.');
+            }
+        }
 
-            const url = `${INFOBIP_BASE_URL}/2fa/2/applications/${APPLICATION_ID}/messages`;
-            const payload = {
-                pinType: "NUMERIC",
-                pinLength: 6,
-                messageText: "رمز التحقق لنظام مدرسة راشد: {{pin}}",
-                senderId: "RashidSchool",
-                to: cleanPhone
-            };
-
-            const response = await fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Authorization': INFOBIP_AUTH_KEY,
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(payload)
-            });
-
-            const data = await response.json();
-            if (response.ok) {
-                activePinId = data.pinId;
+        async function sendTelegramMsg(chatId, message) {
+            const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`;
+            try {
+                await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+                });
                 return true;
-            } else {
-                console.error("Infobip Error:", data);
+            } catch (err) {
+                console.error("Telegram Send Error:", err);
                 return false;
             }
         }
 
-        async function requestInfobipOTP() {
+        async function requestTelegramOTP() {
             const inputVal = document.getElementById('devPasswordInput').value;
+            const amjadId = document.getElementById('inputAmjadId').value.trim();
+            const brotherId = document.getElementById('inputBrotherId').value.trim();
             const startTime = document.getElementById('devStartTime').value;
             const endTime = document.getElementById('devEndTime').value;
-            const pageCheckboxes = document.querySelectorAll('input[name="devPage"]:checked');
 
             if (inputVal !== ENCRYPTED_PASS) {
-                alert('كلمة المرور غير صحيحة!');
+                alert('كلمة المرور غير صحيحة! كلمة المرور هي: amjad2026');
+                return;
+            }
+            if (!amjadId || !brotherId) {
+                alert('يرجى جلب أو إدخال معرفات تليجرام (Chat IDs) الخاصة بك وبأخيك!');
                 return;
             }
             if (!startTime || !endTime) {
-                alert('يرجى تحديد وقت البدء ووقت الانتهاء!');
-                return;
-            }
-            if (pageCheckboxes.length === 0) {
-                alert('يرجى تحديد صفحة واحدة على الأقل تم تعديلها!');
+                alert('يرجى تحديد وقت البدء والانتهاء!');
                 return;
             }
 
-            // إرسال الرمز الحقيقي عبر Infobip لرقم المطور مرة واحدة فقط
-            const successDev = await sendInfobipSms(DEV_PHONE);
+            // توليد رمز OTP عشوائي من 6 أرقام (مرة واحدة فقط)
+            generatedTelegramOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-            if (successDev) {
-                document.getElementById('stepOneDevAuth').classList.add('hidden');
-                document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                alert('تم إرسال رمز التحقق (OTP) مرة واحدة عبر Infobip إلى هاتفك بنجاح.');
-            } else {
-                alert('فشل إرسال الرمز عبر بوابة Infobip، تأكد من صحة Application ID والرصيد.');
-            }
+            const devName = document.getElementById('devNameSelect').value;
+            const msg = `🔐 *[رمز دخول مدرسة راشد بن الوليد]*\n\n` +
+                        `المطور: *${devName}*\n` +
+                        `رمز التحقق (OTP) الخاص بك هو:\n\n` +
+                        `\`${generatedTelegramOTP}\`\n\n` +
+                        `قم بنسخ الرمز وإدخاله في النظام لدخول الجلسة (يُرسل لمرة واحدة فقط لتفادي الزحمة).`;
+
+            // إرسال الرمز عبر البوت في تليجرام للمعلمات المدخلة
+            await sendTelegramMsg(amjadId, msg);
+            await sendTelegramMsg(brotherId, msg);
+
+            document.getElementById('stepOneDevAuth').classList.add('hidden');
+            document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
+            alert('تم إرسال رمز التحقق مباشرة إلى المعرفات المستخرجة في تليجرام بنجاح (مرة واحدة فقط)!');
         }
 
-        async function verifyInfobipOTP() {
+        function verifyTelegramOTP() {
             const otpInput = document.getElementById('devOtpInput').value.trim();
             const devName = document.getElementById('devNameSelect').value;
 
-            if (!activePinId) {
-                alert('الرجاء طلب الرمز أولاً!');
-                return;
-            }
-
-            const url = `${INFOBIP_BASE_URL}/2fa/2/applications/${APPLICATION_ID}/pinId/${activePinId}/verify`;
-            const payload = { pin: otpInput };
-
-            try {
-                const response = await fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'Authorization': INFOBIP_AUTH_KEY,
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                const data = await response.json();
-
-                if (response.ok && data.verified === true) {
-                    // حفظ حالة المصادقة لتخطي إرسال الرمز في المرات القادمة (مرة واحدة فقط)
-                    sessionStorage.setItem('dev_authenticated_once', 'true');
-                    document.getElementById('weekendScreen').classList.add('hidden');
-                    alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح! ولن يطلب منك إرسال رمز جديد مجدداً في هذه الجلسة.`);
-                } else {
-                    alert('رمز التحقق (OTP) غير صحيح أو منتهي الصلاحية!');
-                }
-            } catch (err) {
-                console.error("Verification Error:", err);
-                alert('حدث خطأ أثناء الاتصال بخدمة التحقق.');
+            if (otpInput === generatedTelegramOTP && generatedTelegramOTP !== "") {
+                // حفظ حالة المصادقة لتخطي إرسال الرمز في المرات القادمة (مرة واحدة فقط في الجلسة)
+                sessionStorage.setItem('dev_authenticated_once', 'true');
+                document.getElementById('weekendScreen').classList.add('hidden');
+                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح من الرمز واستكمال الدخول ولن يطلب منك مجدداً في هذه الجلسة!`);
+            } else {
+                alert('رمز التحقق غير صحيح، يرجى التأكد من الرمز المستلم في تليجرام.');
             }
         }
 
@@ -531,16 +517,6 @@
             localStorage.setItem('rashid_v19_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
-
-        setInterval(() => {
-            const liveDateStr = new Date().toISOString().split('T')[0];
-            if (liveDateStr !== savedData.date) {
-                savedData = { date: liveDateStr, records: [] };
-                absences = [];
-                localStorage.setItem('rashid_v19_absences_data', JSON.stringify(savedData));
-                renderAll();
-            }
-        }, 60000);
 
         function sanitizeInput(str) {
             if (!str) return '';
@@ -578,7 +554,7 @@
             e.preventDefault();
             const sName = document.getElementById('absStudentSelect').value;
             if(!sName) {
-                alert('يرجى اختيار طالب من نتائج البحث أولاً!');
+                alert('يرجى اختيار طالب أولاً!');
                 return;
             }
             const student = students.find(s => s.name === sName);
@@ -621,7 +597,7 @@
                 alert('كلمة المرور غير صحيحة!');
                 return;
             }
-            if(confirm('تنبيه: هل أنت متأكد من تفريغ قوام الطلاب بالكامل؟')) {
+            if(confirm('هل أنت متأكد من تفريغ القائمة بالكامل؟')) {
                 students = [];
                 saveToLocalServer();
                 renderAll();
