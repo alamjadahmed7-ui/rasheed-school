@@ -7,7 +7,7 @@
     
     <meta name="description" content="النظام الرسمي المعتمد لرصد غياب الطلاب والحصص الدراسية وتنبيه أولياء الأمور أوتوماتيكياً في مدرسة راشد بن الوليد للبنين بسلطنة عُمان.">
     <meta name="keywords" content="نظام إدارة الغياب, مدرسة راشد بن الوليد, رصد الغياب, وزارة التربية والتعليم عُمان, متابعة الطلاب">
-    <meta name="author" content="المطوران: عبد الرحمن البلوشي وأمجد البلوشي - مدرسة راشد بن الوليد">
+    <meta name="author" content="المطوران: أ. عبد الرحمن البلوشي وأمجد البلوشي - مدرسة راشد بن الوليد">
     
     <meta property="og:title" content="نظام إدارة الغياب - مدرسة راشد بن الوليد للبنين">
     <meta property="og:description" content="البوابة الرسمية لرصد الغياب والحصص وإشعارات الواتساب الآلية.">
@@ -27,28 +27,36 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة الحظر للإدارة والمعلمين في الويكند مع مدخل المطورين -->
+    <!-- شاشة الحظر للإدارة والمعلمين خارج أوقات الدوام مع التحقق الثنائي للمطورين -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900 z-50 flex items-center justify-center p-6 text-center hidden">
         <div class="bg-white p-8 rounded-3xl shadow-2xl max-w-md w-full space-y-4 border-t-8 border-amber-500">
             <div class="text-amber-500 text-5xl">
                 <i class="fa-solid fa-triangle-exclamation"></i>
             </div>
-            <h2 class="text-2xl font-black text-slate-900">عذراً، الموقع مغلق للإدارة مؤقتاً</h2>
+            <h2 class="text-2xl font-black text-slate-900">عذراً، الموقع مغلق خارج أوقات الدوام</h2>
             <p class="text-slate-600 text-sm font-bold leading-relaxed">
-                جاري تطوير الموقع وتحديثه ليصبح أفضل فأفضل.<br>
-                (عطلة نهاية الأسبوع: الخميس، الجمعة، والسبت)
+                جاري تطوير الموقع وتحديثه ليصبح أفضل فأفضل في قريات.<br>
+                (الدوام الرسمي ينتهي الخميس الساعة 2:30 ظهراً)
             </p>
             <div class="bg-indigo-50 text-indigo-900 p-3 rounded-xl text-xs font-bold border border-indigo-100">
-                👨‍💻 تطوير وفريق العمل: <span class="text-indigo-700 font-black">عبد الرحمن البلوشي & أمجد البلوشي</span>
+                👨‍💻 فريق التطوير: <span class="text-indigo-700 font-black">أ. عبد الرحمن البلوشي (@digi5core) & أمجد البلوشي (@just_majjod)</span>
             </div>
-            <div class="pt-3 border-t space-y-2">
-                <p class="text-xs text-slate-500 font-bold">تسجيل دخول المطورين:</p>
-                <div class="flex gap-2">
-                    <input type="password" id="devPasswordInput" placeholder="كلمة مرور المطورين..." class="w-full p-2 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
-                    <button onclick="verifyDeveloperAccess()" class="bg-indigo-900 text-white px-4 py-2 rounded-xl text-xs font-bold whitespace-nowrap hover:bg-indigo-800 transition">
-                        دخول
-                    </button>
+            <div class="pt-3 border-t space-y-3 text-right">
+                <p class="text-xs text-slate-700 font-bold text-center">بوابة تسجيل دخول المطورين:</p>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">اختر اسم المطور:</label>
+                    <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-indigo-500">
+                        <option value="أمجد البلوشي (@just_majjod)">أمجد البلوشي (@just_majjod)</option>
+                        <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
+                    </select>
                 </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-600 mb-1">كلمة المرور السرية:</label>
+                    <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                </div>
+                <button onclick="verifyDeveloperAccess()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
+                    تحقق وتسجيل الأحداث ودخول المطورين
+                </button>
             </div>
         </div>
     </div>
@@ -61,11 +69,11 @@
                 </div>
                 <div>
                     <div class="flex items-center gap-2 mb-1">
-                        <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-0.5 rounded-full shadow">سلطنة عُمان</span>
+                        <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-0.5 rounded-full shadow">سلطنة عُمان - قريات</span>
                         <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rasheed-school-1.onrender.com</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة لرصد الحصص والغياب | المطوران: عبد الرحمن البلوشي وأمجد البلوشي</p>
+                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي (@digi5core) & أمجد البلوشي (@just_majjod)</p>
                 </div>
             </div>
 
@@ -102,7 +110,7 @@
                 <i class="fa-solid fa-database text-emerald-600"></i> إعدادات السيرفرين والحفظ
             </button>
             <button onclick="switchTab('developers')" id="btnDevelopers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
-                <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين
+                <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين وحسابات الإنستجرام
             </button>
         </div>
 
@@ -316,30 +324,36 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 5: صفحة المطورين (عبد الرحمن وأمجد) ================= -->
+        <!-- ================= تبويب 5: صفحة المطورين وحسابات الإنستجرام ================= -->
         <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
             <div class="max-w-xl mx-auto space-y-4">
                 <div class="w-20 h-20 bg-indigo-100 text-indigo-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
                     <i class="fa-solid fa-laptop-code"></i>
                 </div>
-                <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية</h3>
+                <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية - قريات</h3>
                 <p class="text-slate-600 text-sm leading-relaxed">
                     تم تصميم وبرمجة وتطوير نظام إدارة الغياب والتنبيه الآلي لمدرسة راشد بن الوليد للبنين بكل احترافية وإتقان لتسهيل العمل الإداري.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
                         <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                        <h4 class="font-black text-slate-900 text-lg mt-3">عبد الرحمن البلوشي</h4>
-                        <p class="text-xs text-slate-500 mt-1">هندسة وتصميم واجهات النظام</p>
+                        <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
+                        <p class="text-xs text-slate-500">معلم تقنية المعلومات[span_0](start_span)[span_0](end_span)</p>
+                        <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                            <i class="fa-brands fa-instagram"></i> @digi5core[span_1](start_span)[span_1](end_span)
+                        </a>
                     </div>
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-indigo-200 shadow-sm space-y-2">
                         <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                        <h4 class="font-black text-slate-900 text-lg mt-3">أمجد البلوشي</h4>
-                        <p class="text-xs text-slate-500 mt-1">برمجة السيرفرات والبوت والربط</p>
+                        <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
+                        <p class="text-xs text-slate-500">برمجة السيرفرات والبوت والربط</p>
+                        <a href="https://instagram.com/just_majjod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                            <i class="fa-brands fa-instagram"></i> @just_majjod[span_2](start_span)[span_2](end_span)
+                        </a>
                     </div>
                 </div>
                 <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs font-bold border border-emerald-200 mt-4">
-                    🟢 النظام يعمل بكفاءة تامة ومؤمن بالكامل على سيرفرات سحابية ومحلية.
+                    🟢 النظام مربوط بـ Green API لإرسال إشعارات أولياء الأمور عبر رقم أخك، والتنبيهات الحركية لرقمك.
                 </div>
             </div>
         </div>
@@ -347,28 +361,70 @@
     </div>
 
     <script>
-        // كلمة مرور المطورين (يمكنك تعديلها هنا إن أردت)
+        // كلمة مرور المطورين
         const DEV_PASSWORD = "amjad2026";
 
-        // فحص أيام الويكند (الخميس: 4، الجمعة: 5، السبت: 6) وإغلاق الموقع للإدارة
-        const currentDayIndex = new Date().getDay();
-        if ((currentDayIndex === 4 || currentDayIndex === 5 || currentDayIndex === 6) && sessionStorage.getItem('dev_unlocked') !== 'true') {
+        // إعدادات بوت Green API الأساسية لربط البوت
+        const ID_INSTANCE = '710722792988';
+        const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
+        
+        // رقمك الخاص المخصص لتلقي التنبيهات الحركية ودخول المطورين
+        const DEV_NOTIFY_PHONE = '96892033413'; 
+
+        // أوقات الدوام المدرسي والإغلاق التلقائي (من الأحد للخميس حتى 2:30 ظهراً)
+        const now = new Date();
+        const dayIndex = now.getDay(); // 0 الأحد إلى 6 السبت
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        const currentTimeVal = currentHour * 60 + currentMinute;
+
+        let isLocked = false;
+
+        // الجمعة (5) والسبت (6) مغلق طوال اليوم
+        if (dayIndex === 5 || dayIndex === 6) {
+            isLocked = true;
+        } 
+        // من الأحد (0) إلى الخميس (4): يقفل بعد الساعة 2:30 ظهراً (14:30 = 870 دقيقة)
+        else if (currentTimeVal > (14 * 60 + 30)) {
+            isLocked = true;
+        }
+
+        if (isLocked && sessionStorage.getItem('dev_unlocked') !== 'true') {
             document.getElementById('weekendScreen').classList.remove('hidden');
         }
 
-        function verifyDeveloperAccess() {
+        async function verifyDeveloperAccess() {
+            const devName = document.getElementById('devNameSelect').value;
             const inputVal = document.getElementById('devPasswordInput').value;
+
             if (inputVal === DEV_PASSWORD) {
                 sessionStorage.setItem('dev_unlocked', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert('أهلاً بك يا المطور، تم فتح الموقع بصلاحيات عبد الرحمن وأمجد بنجاح!');
+                alert(`أهلاً بك يا ${devName}، تم التحقق والدخول بنجاح لتطوير الصفحات في قريات!`);
+
+                // نظام الاحداث الحركية: إرسال تنبيه عبر Green API إلى رقمك الشخصي
+                try {
+                    let notifyPhone = DEV_NOTIFY_PHONE.replace(/[^0-9]/g, '');
+                    if(!notifyPhone.startsWith('968') && notifyPhone.length === 8) {
+                        notifyPhone = '968' + notifyPhone;
+                    }
+                    const chatId = `${notifyPhone}@c.us`;
+                    const alertMsg = `🤖 *[سجل الأحداث الحركي - نظام مدرسة راشد]*\n\n` +
+                                     `⚠️ قام المطور (*${devName}*) بتسجيل الدخول بنجاح إلى النظام وقام بتعديل وتطوير الصفحات والأكواد.`;
+
+                    await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ chatId: chatId, message: alertMsg })
+                    });
+                } catch (err) {
+                    console.error("فشل إرسال إشعار الأحداث عبر Green API:", err);
+                }
+
             } else {
                 alert('كلمة المرور غير صحيحة!');
             }
         }
-
-        const ID_INSTANCE = '710722792988';
-        const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
 
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
@@ -424,6 +480,7 @@
             alert('تمت إضافة الطالب وحفظه بنجاح وتأمينه!');
         });
 
+        // رصد الغياب وإرسال التنبيهات عبر Green API لأرقام أولياء الأمور
         document.getElementById('absenceForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const sName = document.getElementById('absStudentSelect').value;
