@@ -17,21 +17,20 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة تسجيل دخول المطور ونظام استخراج الآديات والـ OTP -->
+    <!-- شاشة التحقق وأوقات الدوام الرسمي (الأحد إلى الخميس، الخميس يقفل 2:30 ظهراً) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-sky-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
                 <div class="text-sky-500 text-5xl inline-block bg-sky-50 p-3 rounded-2xl">
                     <i class="fa-brands fa-telegram"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين - استخراج الآديات والـ OTP</h2>
-                <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                    استخرج الـ Chat ID الخاص بك وأخيك تلقائياً، وأرسل رمز الـ OTP **مرة واحدة فقط** لتأمين الجلسة.
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين - بوت تليجرام الآمن</h2>
+                <p id="systemStatusMsg" class="text-slate-600 text-xs font-bold leading-relaxed">
+                    استخرج الـ Chat ID من بوت <span class="text-sky-600 font-black">@RashedSchoolAuth_bot</span>، وأدخل رمز الـ OTP لدخول الجلسة.
                 </p>
             </div>
             
             <div class="pt-3 border-t space-y-3">
-                <!-- الخطوة 1: استخراج الآديات وإدخال كلمة المرور -->
                 <div id="stepOneDevAuth" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
@@ -41,10 +40,9 @@
                         </select>
                     </div>
 
-                    <!-- نظام استخراج الآديات التلقائي -->
                     <div class="bg-sky-50 p-3 rounded-2xl border border-sky-200 space-y-2">
                         <div class="flex justify-between items-center">
-                            <span class="text-xs font-bold text-sky-900">🔍 استخراج Chat ID من البوت:</span>
+                            <span class="text-xs font-bold text-sky-900">🔍 استخراج Chat ID من @RashedSchoolAuth_bot:</span>
                             <button onclick="fetchTelegramChatIds()" type="button" class="bg-sky-600 hover:bg-sky-700 text-white text-[11px] px-3 py-1.5 rounded-xl font-bold transition shadow">
                                 جلب الآديات تلقائياً
                             </button>
@@ -61,31 +59,19 @@
                         </div>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">وقت البدء:</label>
-                            <input type="time" id="devStartTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-slate-700 mb-1">وقت الانتهاء:</label>
-                            <input type="time" id="devEndTime" class="w-full p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
-                        </div>
-                    </div>
-
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">كلمة المرور السرية:</label>
                         <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور (amjad2026)..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-sky-500 font-bold">
                     </div>
 
                     <button onclick="requestTelegramOTP()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-3 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2">
-                        <i class="fa-paper-plane fa-solid"></i> إرسال رمز التحقق (مرة واحدة فقط)
+                        <i class="fa-paper-plane fa-solid"></i> إرسال رمز التحقق (OTP)
                     </button>
                 </div>
 
-                <!-- الخطوة 2: إدخال الرمز واستكمال الدخول -->
                 <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-sky-50/50 p-4 rounded-2xl border border-sky-200">
                     <div class="text-center space-y-1">
-                        <span class="text-xs text-sky-900 font-bold block">تم إرسال الرمز لتليجرام بنجاح! (ولن يُطلب مجدداً في هذه الجلسة).</span>
+                        <span class="text-xs text-sky-900 font-bold block">تم إرسال الرمز لتليجرام بنجاح عبر @RashedSchoolAuth_bot!</span>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (OTP):</label>
@@ -139,7 +125,7 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">مؤمن</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">مؤمن بالبوت</span>
                     </div>
                 </div>
             </div>
@@ -380,15 +366,41 @@
 
     <script>
         const ENCRYPTED_PASS = "amjad2026";
-        
-        // ===== توكن البوت الثابت الخاص بك =====
-        const TELEGRAM_BOT_TOKEN = "8012345678:ABCdefGhIJKlmNoPQRsTUVwxyZ"; // ضع توكن بوتك الحقيقي هنا
-
+        const TELEGRAM_BOT_TOKEN = "9033347038:AAH2xsTD6u0hwpVTIJR9Gp3R2YZsRTJyOdI";
         let generatedTelegramOTP = "";
 
-        if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
-            document.getElementById('weekendScreen').classList.remove('hidden');
+        // فحص الدوام الرسمي: الأحد إلى الخميس، والخميس يقفل الساعة 2:30 ظهراً بدقة
+        function checkSchoolSchedule() {
+            const now = new Date();
+            const dayOfWeek = now.getDay(); // 0: الأحد، 1: الإثنين، 2: الثلاثاء، 3: الأربعاء، 4: الخميس، 5: الجمعة، 6: السبت
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const currentTimeVal = hours * 60 + minutes;
+            const closeTimeVal = 14 * 60 + 30; // 2:30 ظهراً
+
+            let isOutsideWorkingHours = false;
+            let statusText = "";
+
+            if (dayOfWeek === 5 || dayOfWeek === 6) {
+                isOutsideWorkingHours = true;
+                statusText = "عطلة نهاية الأسبوع - النظام مغلق.";
+            } else if (dayOfWeek === 4 && currentTimeVal > closeTimeVal) {
+                isOutsideWorkingHours = true;
+                statusText = "انتهى الدوام المدرسي (الخميس بعد الساعة 2:30 ظهراً) - النظام مغلق.";
+            }
+
+            if (isOutsideWorkingHours) {
+                document.getElementById('systemStatusMsg').textContent = statusText;
+                document.getElementById('weekendScreen').classList.remove('hidden');
+                document.getElementById('stepOneDevAuth').classList.add('hidden');
+            } else {
+                if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
+                    document.getElementById('weekendScreen').classList.remove('hidden');
+                }
+            }
         }
+
+        checkSchoolSchedule();
 
         function developerLogout() {
             sessionStorage.removeItem('dev_authenticated_once');
@@ -396,20 +408,14 @@
             location.reload();
         }
 
-        // دالة جلب الآديات (Chat IDs) تلقائياً من تليجرام
+        // جلب الـ Chat IDs تلقائياً وبدقة من البوت @RashedSchoolAuth_bot
         async function fetchTelegramChatIds() {
-            if(!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes("8012345678")) {
-                alert('يرجى وضع توكن البوت الحقيقي (TELEGRAM_BOT_TOKEN) في كود الجافاسكريبت أولاً!');
-                return;
-            }
-            
             const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/getUpdates`;
             try {
                 const response = await fetch(url);
                 const data = await response.json();
                 
                 if(data.ok && data.result.length > 0) {
-                    // استخراج أحدث الآديات من الرسائل المرسلة للبوت
                     const updates = data.result;
                     let foundChatId = "";
                     for(let i = updates.length - 1; i >= 0; i--) {
@@ -421,16 +427,16 @@
                     
                     if(foundChatId) {
                         document.getElementById('inputAmjadId').value = foundChatId;
-                        alert('تم استخراج Chat ID بنجاح: ' + foundChatId);
+                        alert('تم استخراج Chat ID بنجاح بدقة: ' + foundChatId);
                     } else {
-                        alert('تنبيه: لم يتم العثور على رسائل واردة للبوت. أرسل أي رسالة للبوت في تليجرام ثم أعد المحاولة.');
+                        alert('تنبيه: أرسل رسالة لبوتك @RashedSchoolAuth_bot في تليجرام أولاً ثم اضغط جلب.');
                     }
                 } else {
-                    alert('لا توجد تحديثات حديثة. أرسل رسالة للبوت في تليجرام أولاً ثم اضغط جلب.');
+                    alert('لا توجد تحديثات حالية. أرسل رسالة للبوت @RashedSchoolAuth_bot ثم أعد المحاولة.');
                 }
             } catch (err) {
                 console.error("Fetch ID Error:", err);
-                alert('حدث خطأ أثناء جلب الـ ID، تأكد من اتصال الإنترنت وصحة التوكن.');
+                alert('حدث خطأ أثناء جلب الـ ID.');
             }
         }
 
@@ -453,39 +459,30 @@
             const inputVal = document.getElementById('devPasswordInput').value;
             const amjadId = document.getElementById('inputAmjadId').value.trim();
             const brotherId = document.getElementById('inputBrotherId').value.trim();
-            const startTime = document.getElementById('devStartTime').value;
-            const endTime = document.getElementById('devEndTime').value;
 
             if (inputVal !== ENCRYPTED_PASS) {
                 alert('كلمة المرور غير صحيحة! كلمة المرور هي: amjad2026');
                 return;
             }
             if (!amjadId || !brotherId) {
-                alert('يرجى جلب أو إدخال معرفات تليجرام (Chat IDs) الخاصة بك وبأخيك!');
-                return;
-            }
-            if (!startTime || !endTime) {
-                alert('يرجى تحديد وقت البدء والانتهاء!');
+                alert('يرجى جلب أو إدخال معرفات تليجرام (Chat IDs) أولاً!');
                 return;
             }
 
-            // توليد رمز OTP عشوائي من 6 أرقام (مرة واحدة فقط)
             generatedTelegramOTP = Math.floor(100000 + Math.random() * 900000).toString();
-
             const devName = document.getElementById('devNameSelect').value;
             const msg = `🔐 *[رمز دخول مدرسة راشد بن الوليد]*\n\n` +
                         `المطور: *${devName}*\n` +
                         `رمز التحقق (OTP) الخاص بك هو:\n\n` +
                         `\`${generatedTelegramOTP}\`\n\n` +
-                        `قم بنسخ الرمز وإدخاله في النظام لدخول الجلسة (يُرسل لمرة واحدة فقط لتفادي الزحمة).`;
+                        `قم بنسخ الرمز وإدخاله في النظام لدخول الجلسة.`;
 
-            // إرسال الرمز عبر البوت في تليجرام للمعلمات المدخلة
             await sendTelegramMsg(amjadId, msg);
             await sendTelegramMsg(brotherId, msg);
 
             document.getElementById('stepOneDevAuth').classList.add('hidden');
             document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-            alert('تم إرسال رمز التحقق مباشرة إلى المعرفات المستخرجة في تليجرام بنجاح (مرة واحدة فقط)!');
+            alert('تم إرسال رمز التحقق عبر بوت @RashedSchoolAuth_bot بنجاح!');
         }
 
         function verifyTelegramOTP() {
@@ -493,12 +490,11 @@
             const devName = document.getElementById('devNameSelect').value;
 
             if (otpInput === generatedTelegramOTP && generatedTelegramOTP !== "") {
-                // حفظ حالة المصادقة لتخطي إرسال الرمز في المرات القادمة (مرة واحدة فقط في الجلسة)
                 sessionStorage.setItem('dev_authenticated_once', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح من الرمز واستكمال الدخول ولن يطلب منك مجدداً في هذه الجلسة!`);
+                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح واستكمال الدخول!`);
             } else {
-                alert('رمز التحقق غير صحيح، يرجى التأكد من الرمز المستلم في تليجرام.');
+                alert('رمز التحقق غير صحيح.');
             }
         }
 
@@ -510,11 +506,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v19_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v19_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v21_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v21_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v19_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v21_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -606,8 +602,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v19_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v19_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v21_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v21_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
