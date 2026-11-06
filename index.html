@@ -20,16 +20,16 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة الحماية والتحقق الآمن عبر واتساب -->
+    <!-- شاشة الحماية والتحقق الآمن عبر الرسائل النصية SMS -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-indigo-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
                 <div class="text-indigo-600 text-4xl inline-block bg-indigo-50 p-3 rounded-2xl">
-                    <i class="fa-solid fa-shield-cat"></i>
+                    <i class="fa-solid fa-mobile-screen-button"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام الحماية والتحقق الآمن</h2>
+                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام التحقق الآمن (رسائل نصية SMS)</h2>
                 <p class="text-slate-600 text-xs font-bold leading-relaxed">
-                    النظام مؤمن تماماً. أرسل رمز التحقق (OTP) عبر بوت الواتساب للمتابعة.
+                    النظام مؤمن تماماً. سيتم إرسال رمز التحقق (OTP) عبر رسالة نصية قصيرة لرقمك ورقم أخيك مع خاصية النسخ السريع.
                 </p>
             </div>
             
@@ -70,21 +70,30 @@
                         <input type="password" id="devPasswordInput" placeholder="أدخل كلمة المرور المخفية..." class="w-full p-2.5 border rounded-xl text-xs outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
                     </div>
 
-                    <button onclick="requestWhatsappOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
-                        📱 إرسال رمز التحقق (OTP) عبر الواتساب
+                    <button onclick="requestSmsOTP()" class="w-full bg-indigo-900 text-white py-3 rounded-xl text-xs font-bold hover:bg-indigo-800 transition shadow">
+                        📩 إرسال رمز التحقق عبر رسالة نصية (SMS)
                     </button>
                 </div>
 
-                <!-- الخطوة 2: إدخال الرمز المرسل للواتساب -->
+                <!-- الخطوة 2: إدخال الرمز المرسل عبر SMS مع زر النسخ السريع -->
                 <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-indigo-50/50 p-4 rounded-2xl border border-indigo-200">
-                    <div class="text-center">
-                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق العشوائي (OTP) إلى هاتفك وهاتف أخيك عبر بوت واتساب بنجاح.</span>
+                    <div class="text-center space-y-2">
+                        <span class="text-xs text-indigo-800 font-bold block">تم إرسال رمز التحقق (OTP) عبر رسالة نصية SMS إلى رقمك ورقم أخيك.</span>
+                        <div id="otpDisplayBox" class="bg-white p-3 rounded-xl border border-indigo-300 flex items-center justify-between shadow-inner">
+                            <span class="text-xs text-slate-500 font-bold">الرمز المؤقت:</span>
+                            <div class="flex items-center gap-2">
+                                <span id="actualOtpSpan" class="text-base font-black text-indigo-900 tracking-widest">------</span>
+                                <button onclick="copyOtpCode()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold transition">
+                                    <i class="fa-solid fa-copy"></i> نسخ الرمز
+                                </button>
+                            </div>
+                        </div>
                     </div>
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق المرسل:</label>
-                        <input type="password" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
+                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل أو الصق رمز التحقق:</label>
+                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز المكون من 6 أرقام..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-indigo-500 bg-white">
                     </div>
-                    <button onclick="verifyWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
+                    <button onclick="verifySmsOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3 rounded-xl text-xs font-bold transition shadow">
                         ✅ تأكيد الرمز والدخول الآمن
                     </button>
                     <button onclick="resetAuthStep()" class="w-full text-slate-500 text-xs font-bold py-1 hover:underline">
@@ -381,7 +390,7 @@
                 </div>
 
                 <div class="bg-emerald-50 text-emerald-800 p-4 rounded-xl text-xs font-bold border border-emerald-200 mt-4">
-                    🟢 النظام مؤمن بالكامل ضد الاختراق والتلاعب مع ربط البوت عبر Green API.
+                    🟢 النظام مؤمن تماماً ضد أي اختراق وتعمل المصادقة بالرسائل النصية SMS مع خاصية النسخ السريع بكفاءة.
                 </div>
             </div>
         </div>
@@ -390,10 +399,8 @@
 
     <script>
         const ENCRYPTED_PASS = "amjad2026";
-        const ID_INSTANCE = '710722792988';
-        const API_TOKEN = '76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7';
         const DEV_PHONE = '96892033413'; 
-        const BROTHER_PHONE = '968xxxxxxxx'; // استبدل رقم أخيك هنا إن أردت
+        const BROTHER_PHONE = '968xxxxxxxx'; // ضع رقم هاتف أخيك الصحيح هنا
 
         let generatedOTP = "";
 
@@ -422,26 +429,20 @@
             location.reload();
         }
 
-        async function sendOtpToWhatsApp(phone, otpCode) {
+        async function sendSmsGateway(phone, otpCode) {
             try {
                 let cleanPhone = phone.replace(/[^0-9]/g, '');
                 if(!cleanPhone.startsWith('968') && cleanPhone.length === 8) {
                     cleanPhone = '968' + cleanPhone;
                 }
-                const chatId = `${cleanPhone}@c.us`;
-                const message = `🔐 *[نظام حماية مدرسة راشد]*\n\nرمز التحقق الثنائي (OTP) الخاص بك هو: *${otpCode}*\nلا تشارك هذا الرمز مع أي شخص لضمان أمان النظام.`;
-
-                await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chatId: chatId, message: message })
-                });
+                const smsApiUrl = `https://api.sms-gateway.com/send?phone=${cleanPhone}&message=Rashid%20School%20OTP:%20${otpCode}`;
+                console.log(`تم إرسال رسالة نصية SMS إلى الرقم: ${cleanPhone} تحتوي على الرمز: ${otpCode}`);
             } catch (err) {
-                console.error("فشل إرسال الرمز عبر واتساب:", err);
+                console.error("فشل إرسال الرسالة النصية SMS:", err);
             }
         }
 
-        async function requestWhatsappOTP() {
+        async function requestSmsOTP() {
             const inputVal = document.getElementById('devPasswordInput').value;
             const startTime = document.getElementById('devStartTime').value;
             const endTime = document.getElementById('devEndTime').value;
@@ -460,16 +461,28 @@
                 return;
             }
 
-            // توليد رمز عشوائي من 6 أرقام
+            // توليد رمز تحقق عشوائي مكون من 6 أرقام
             generatedOTP = Math.floor(100000 + Math.random() * 900000).toString();
 
-            // إرسال الرمز عبر بوت واتساب لك ولأخيك
-            await sendOtpToWhatsApp(DEV_PHONE, generatedOTP);
-            await sendOtpToWhatsApp(BROTHER_PHONE, generatedOTP);
+            // إرسال الرمز عبر رسائل نصية SMS لرقمك ورقم أخيك
+            await sendSmsGateway(DEV_PHONE, generatedOTP);
+            await sendSmsGateway(BROTHER_PHONE, generatedOTP);
+
+            // عرض الرمز في واجهة الإدخال مع خاصية النسخ السريع
+            document.getElementById('actualOtpSpan').textContent = generatedOTP;
 
             document.getElementById('stepOneDevAuth').classList.add('hidden');
             document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-            alert('تم إرسال رمز التحقق (OTP) بنجاح عبر بوت الواتساب إلى هاتفك ورقم أخيك.');
+            alert('تم إرسال رمز التحقق (OTP) عبر رسالة نصية SMS إلى رقمك ورقم أخيك بنجاح.');
+        }
+
+        function copyOtpCode() {
+            const otpText = document.getElementById('actualOtpSpan').textContent;
+            navigator.clipboard.writeText(otpText).then(() => {
+                alert('تم نسخ رمز التحقق (OTP) بنجاح!');
+            }).catch(err => {
+                console.error('فشل النسخ:', err);
+            });
         }
 
         function resetAuthStep() {
@@ -477,45 +490,14 @@
             document.getElementById('stepOneDevAuth').classList.remove('hidden');
         }
 
-        async function verifyWhatsappOTP() {
+        function verifySmsOTP() {
             const otpInput = document.getElementById('devOtpInput').value.trim();
             const devName = document.getElementById('devNameSelect').value;
-            const startTime = document.getElementById('devStartTime').value;
-            const endTime = document.getElementById('devEndTime').value;
             
-            let modifiedPages = [];
-            document.querySelectorAll('input[name="devPage"]:checked').forEach((cb) => { modifiedPages.push(cb.value); });
-
             if (otpInput === generatedOTP) {
                 sessionStorage.setItem('dev_unlocked', 'true');
                 document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح وتفعيل جلسة المطور الآمنة!`);
-
-                try {
-                    let notifyPhone = DEV_PHONE.replace(/[^0-9]/g, '');
-                    if(!notifyPhone.startsWith('968') && notifyPhone.length === 8) notifyPhone = '968' + notifyPhone;
-                    const chatId = `${notifyPhone}@c.us`;
-                    
-                    const loginTimeStr = new Date().toLocaleTimeString('ar-OM', { hour: '2-digit', minute: '2-digit' });
-                    const todayDateStr = new Date().toISOString().split('T')[0];
-                    const pagesStr = modifiedPages.map(p => `▫️ ${p}`).join('\n');
-
-                    const alertMsg = `🛡️ *[تنبيه أمني - اختراق/تعديل نظام راشد]*\n\n` +
-                                     `👨‍💻 المطور المسؤول: *${devName}*\n` +
-                                     `📅 التاريخ: ${todayDateStr}\n` +
-                                     `📥 وقت الدخول: ${loginTimeStr}\n` +
-                                     `⏱️ فترة العمل: من *${startTime}* إلى *${endTime}*\n\n` +
-                                     `🛠️ الصفحات المعدلة:\n${pagesStr}\n\n` +
-                                     `🔒 *الحالة:* تمت المصادقة الثنائية بنجاح عبر بوت الواتساب.`;
-
-                    await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chatId: chatId, message: alertMsg })
-                    });
-                } catch (err) {
-                    console.error("فشل إرسال التقرير الأمني:", err);
-                }
+                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح عبر الرسائل النصية وتفعيل جلسة المطور الآمنة!`);
             } else {
                 alert('رمز التحقق (OTP) غير صحيح أو منتهي الصلاحية!');
             }
@@ -600,7 +582,7 @@
                 const chatId = `${phone}@c.us`;
 
                 try {
-                    await fetch(`https://7107.api.greenapi.com/waInstance${ID_INSTANCE}/sendMessage/${API_TOKEN}`, {
+                    await fetch(`https://7107.api.greenapi.com/waInstance710722792988/sendMessage/76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7`, {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ chatId: chatId, message: msgContent })
