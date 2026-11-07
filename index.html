@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة التحقق للمطورين (مع وضع التطوير النشط للاختبار والتعديل في أي وقت) -->
+    <!-- شاشة التحقق للمطورين الآمنة -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
@@ -26,7 +26,7 @@
                 </div>
                 <h2 id="screenTitle" class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين الآمن - WhatsApp</h2>
                 <p id="screenDesc" class="text-slate-600 text-xs font-bold leading-relaxed">
-                    اختر الحساب وحدد رمز الدولة ورقم الواتساب ليصلك رمز الـ OTP لمرة واحدة.
+                    اختر الحساب ورقم الواتساب، واضغط لإرسال واستلام رمز الـ OTP المنسق فوراً.
                 </p>
             </div>
             
@@ -35,8 +35,8 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
                         <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500">
-                            <option value="أمجد البلوشي">أمجد البلوشي (@just_majod)</option>
-                            <option value="أ. عبد الرحمن البلوشي">أ. عبد الرحمن البلوشي (@digi5core)</option>
+                            <option value="أمجد البلوشي (@just_majod)">أمجد البلوشي (@just_majod)</option>
+                            <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
                         </select>
                     </div>
 
@@ -56,17 +56,18 @@
                     </div>
 
                     <button onclick="requestWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2 mt-2">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> إرسال رمز التحقق (OTP) عبر الواتساب
+                        <i class="fa-brands fa-whatsapp text-lg"></i> إرسال رمز الـ OTP عبر الواتساب
                     </button>
                 </div>
 
                 <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200">
                     <div class="text-center space-y-1">
-                        <span class="text-xs text-emerald-900 font-bold block">تم إرسال رمز التحقق إلى الواتساب بنجاح!</span>
+                        <span class="text-xs text-emerald-900 font-bold block">تم فتح محادثة الواتساب للتو!</span>
+                        <p class="text-[11px] text-slate-500 mt-1">اضغط إرسال في الواتساب، ثم انسخ الرمز المكون من 6 أرقام واكتبه هنا.</p>
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (OTP):</label>
-                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز المكون من 6 أرقام..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
                     <button onclick="verifyWhatsappOTP()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-3 rounded-xl text-xs font-bold transition shadow">
                         ✅ تأكيد الرمز والدخول للنظام
@@ -85,6 +86,7 @@
         </div>
     </div>
 
+    <!-- رأس الصفحة -->
     <header class="glass-header text-white shadow-2xl border-b-4 border-amber-400">
         <div class="max-w-7xl mx-auto p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
             <div class="flex items-center gap-5">
@@ -116,13 +118,14 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">وضع التطوير</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">دوام رسمي</span>
                     </div>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- محتوى التبويبات -->
     <div class="max-w-7xl mx-auto px-4 mt-8 space-y-6">
 
         <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-2">
@@ -140,7 +143,7 @@
             </button>
         </div>
 
-        <!-- ================= تبويب 1: إدارة الطلاب ================= -->
+        <!-- تبويب 1: إدارة الطلاب -->
         <div id="tabStudents" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -206,7 +209,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 2: رصد الغياب ================= -->
+        <!-- تبويب 2: رصد الغياب -->
         <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
             <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
                 <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
@@ -269,7 +272,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 3: لوحة الإدارة ================= -->
+        <!-- تبويب 3: لوحة الإدارة -->
         <div id="tabAdministration" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden">
             <div class="border-b pb-4 flex items-center justify-between">
                 <div>
@@ -318,7 +321,7 @@
             </div>
         </div>
 
-        <!-- ================= تبويب 4: صفحة المطورين ================= -->
+        <!-- تبويب 4: صفحة المطورين -->
         <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
             <div class="max-w-xl mx-auto space-y-4">
                 <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
@@ -352,12 +355,13 @@
 
     </div>
 
+    <!-- البرمجة والسكربتات -->
     <script>
         const GREEN_API_ID = "710722792988";
         const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedWhatsappOTP = "";
 
-        // فحص جدول الدوام الرسمي مع تفعيل وضع تجاوز التطوير لاختبار النظام في عطلة نهاية الأسبوع
+        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، الخميس يغلق الساعة 2:30 ظهراً، والجمعة والسبت عطلة)
         function checkSchoolSchedule() {
             if (sessionStorage.getItem('dev_authenticated_once') === 'true') {
                 document.getElementById('weekendScreen').classList.add('hidden');
@@ -373,18 +377,12 @@
             let isClosed = false;
             let closeReason = "";
 
-            // تعليق الإغلاق التلقائي مؤقتاً في وضع التطوير لتستطيع الدخول والتعديل بحرية
-            // (أو يمكنك تفعيله لاحقاً بالاعتماد على الأيام الرسمية الأحد-الخميس وإغلاق الخميس 2:30 ظهراً)
-            let devModeOverride = true; // مفعل حالياً للتطوير والاختبار
-
-            if (!devModeOverride) {
-                if (day === 5 || day === 6) {
-                    isClosed = true;
-                    closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
-                } else if (day === 4 && timeNum >= 14 * 60 + 30) {
-                    isClosed = true;
-                    closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
-                }
+            if (day === 5 || day === 6) {
+                isClosed = true;
+                closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
+            } else if (day === 4 && timeNum >= 14 * 60 + 30) {
+                isClosed = true;
+                closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
             }
 
             if (isClosed) {
@@ -405,7 +403,7 @@
             location.reload();
         }
 
-        async function requestWhatsappOTP() {
+        function requestWhatsappOTP() {
             let countryCode = document.getElementById('countryCodeSelect').value;
             let phoneInput = document.getElementById('devWhatsappPhone').value.trim();
             
@@ -423,31 +421,26 @@
             generatedWhatsappOTP = Math.floor(100000 + Math.random() * 900000).toString();
             const devName = document.getElementById('devNameSelect').value;
 
-            const msgContent = `🔐 *[رمز الدخول الآمن - مدرسة راشد بن الوليد]*\n\n` +
-                               `المطور: *${devName}*\n` +
-                               `رمز التحقق (OTP) لمرة واحدة هو:\n\n` +
+            const currentDateStr = new Date().toISOString().split('T')[0];
+            const currentTimeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+
+            // رسالة الواتساب المنسقة بدقة والمطابقة للشكل المطلوب
+            const msgContent = `🛡️ *[نظام حماية مدرسة راشد]*\n\n` +
+                               `👮‍♂️ المطور المسؤول: *${devName}*\n` +
+                               `📅 التاريخ: *${currentDateStr}*\n` +
+                               `⏰ وقت الدخول: *${currentTimeStr}*\n` +
+                               `⏱️ فترة العمل: *من 21:11 إلى 22:15*\n\n` +
+                               `🔐 رمز التحقق الثنائي (OTP) الخاص بك هو:\n` +
                                `*${generatedWhatsappOTP}*\n\n` +
-                               `يرجى عدم مشاركته مع أي شخص.`;
+                               `لا تشارك هذا الرمز مع أي شخص لضمان أمان النظام.\n` +
+                               `🔒 الحالة: تمت المصادقة الثنائية بنجاح عبر بوت الواتساب.`;
 
-            const chatId = `${fullPhone}@c.us`;
-            const apiUrl = `https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
+            // فتح واتساب مباشرة لضمان وصول الرسالة بدون مشاكل الـ CORS
+            const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msgContent)}`;
+            window.open(waUrl, '_blank');
 
-            try {
-                await fetch(apiUrl, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chatId: chatId, message: msgContent })
-                });
-
-                document.getElementById('stepOneDevAuth').classList.add('hidden');
-                document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
-            } catch (err) {
-                console.error("WhatsApp Send Error:", err);
-                document.getElementById('stepOneDevAuth').classList.add('hidden');
-                document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                alert('تم إرسال الطلب بنجاح، تحقق من رسائل الواتساب!');
-            }
+            document.getElementById('stepOneDevAuth').classList.add('hidden');
+            document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
         }
 
         function verifyWhatsappOTP() {
@@ -471,11 +464,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v33_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v33_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v35_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v35_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v33_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v35_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -511,7 +504,7 @@
             alert('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        document.getElementById('absenceForm').addEventListener('submit', async function(e) {
+        document.getElementById('absenceForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const sName = document.getElementById('absStudentSelect').value;
             if(!sName) {
@@ -534,17 +527,9 @@
                 let phone = student.phone.replace(/[^0-9]/g, '');
                 if(!phone.startsWith('968') && phone.length === 8) phone = '968' + phone;
 
-                const chatId = `${phone}@c.us`;
-
-                try {
-                    await fetch(`https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ chatId: chatId, message: msgContent })
-                    });
-                } catch (error) {
-                    console.error(error);
-                }
+                // إرسال إشعار الغياب لولي الأمر عبر واتساب مباشرة
+                const waParentUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msgContent)}`;
+                window.open(waParentUrl, '_blank');
             }
 
             renderAll();
@@ -561,8 +546,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v33_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v33_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v35_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v35_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
