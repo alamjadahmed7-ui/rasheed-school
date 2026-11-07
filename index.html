@@ -17,20 +17,20 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة التحقق للمطورين (عبر الواتساب وبدون كلمة مرور) -->
+    <!-- شاشة إغلاق النظام أو التحقق للمطورين -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
                 <div class="text-emerald-500 text-5xl inline-block bg-emerald-50 p-3 rounded-2xl">
                     <i class="fa-brands fa-whatsapp"></i>
                 </div>
-                <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين الآمن - WhatsApp</h2>
-                <p id="systemStatusMsg" class="text-slate-600 text-xs font-bold leading-relaxed">
+                <h2 id="screenTitle" class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين الآمن - WhatsApp</h2>
+                <p id="screenDesc" class="text-slate-600 text-xs font-bold leading-relaxed">
                     اختر الحساب وحدد رمز الدولة ورقم الواتساب ليصلك رمز الـ OTP لمرة واحدة.
                 </p>
             </div>
             
-            <div class="pt-3 border-t space-y-3">
+            <div id="authContainer" class="pt-3 border-t space-y-3">
                 <div id="stepOneDevAuth" class="space-y-3">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
@@ -43,7 +43,6 @@
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">رقم الواتساب لاستلام الرمز (OTP):</label>
                         <div class="flex gap-2">
-                            <!-- قائمة منسدلة ذكية لرمز الدولة -->
                             <select id="countryCodeSelect" class="w-32 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-center">
                                 <option value="968" selected>🇴🇲 +968 (عُمان)</option>
                                 <option value="971">🇦🇪 +971 (الإمارات)</option>
@@ -51,7 +50,6 @@
                                 <option value="974">🇶🇦 +974 (قطر)</option>
                                 <option value="973">🇧🇭 +973 (البحرين)</option>
                                 <option value="965">🇰🇼 +965 (الكويت)</option>
-                                <option value="20">🇪🇬 +20 (مصر)</option>
                             </select>
                             <input type="text" id="devWhatsappPhone" placeholder="92033413" class="flex-1 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-right">
                         </div>
@@ -118,7 +116,7 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">آمن ومؤمن</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">مفعل رسمي</span>
                     </div>
                 </div>
             </div>
@@ -324,11 +322,40 @@
         const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedWhatsappOTP = "";
 
+        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، والخميس ينتهي الساعة 2:30 ظهراً)
         function checkSchoolSchedule() {
-            if (sessionStorage.getItem('dev_authenticated_once') !== 'true') {
-                document.getElementById('weekendScreen').classList.remove('hidden');
-            } else {
+            if (sessionStorage.getItem('dev_authenticated_once') === 'true') {
                 document.getElementById('weekendScreen').classList.add('hidden');
+                return;
+            }
+
+            const now = new Date();
+            const day = now.getDay(); // 0: الأحد ... 4: الخميس، 5: الجمعة، 6: السبت
+            const hours = now.getHours();
+            const minutes = now.getMinutes();
+            const timeNum = hours * 60 + minutes; // الدقائق منذ منتصف الليل
+
+            let isClosed = false;
+            let closeReason = "";
+
+            // الجمعة (5) والسبت (6) مغلق تماماً
+            if (day === 5 || day === 6) {
+                isClosed = true;
+                closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
+            } 
+            // يوم الخميس (4) بعد الساعة 2:30 ظهراً (14:30 = 870 دقيقة) مغلق
+            else if (day === 4 && timeNum >= 14 * 60 + 30) {
+                isClosed = true;
+                closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
+            }
+
+            if (isClosed) {
+                document.getElementById('weekendScreen').classList.remove('hidden');
+                document.getElementById('screenTitle.textContent = "النظام مغلق حالياً";
+                document.getElementById('screenDesc').textContent = closeReason;
+                document.getElementById('authContainer').classList.add('hidden');
+            } else {
+                document.getElementById('weekendScreen').classList.remove('hidden');
             }
         }
 
@@ -368,12 +395,16 @@
             const apiUrl = `https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
 
             try {
+                // إرسال الطلب عبر fetch مع التعامل مع استجابة الخادم بدقة
                 const res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chatId: chatId, message: msgContent })
                 });
 
+                const data = await res.json();
+                
+                // الانتقال لخطوة الإدخال مباشرة للتأكد من سلاسة التجربة
                 document.getElementById('stepOneDevAuth').classList.add('hidden');
                 document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
                 alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
@@ -381,7 +412,7 @@
                 console.error("WhatsApp Send Error:", err);
                 document.getElementById('stepOneDevAuth').classList.add('hidden');
                 document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                alert('تم إرسال الطلب بنجاح، تحقق من رسائل الواتساب!');
+                alert('تم إرسال طلب الرمز، تحقق من رسائل الواتساب الآن!');
             }
         }
 
@@ -406,11 +437,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v30_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v30_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v31_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v31_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v30_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v31_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -496,8 +527,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v30_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v30_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v31_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v31_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
