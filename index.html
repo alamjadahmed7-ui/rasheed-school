@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة إغلاق النظام أو التحقق للمطورين -->
+    <!-- شاشة التحقق للمطورين (أو الإغلاق الرسمي لعطلة نهاية الأسبوع والخميس بعد 2:30) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
@@ -97,7 +97,7 @@
                         <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rashed-bin-alwaleed.co</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة</p>
+                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
                 </div>
             </div>
 
@@ -116,7 +116,7 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">مفعل رسمي</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">دوام رسمي</span>
                     </div>
                 </div>
             </div>
@@ -134,6 +134,9 @@
             </button>
             <button onclick="switchTab('administration')" id="btnAdministration" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
                 <i class="fa-solid fa-user-tie text-amber-600"></i> لوحة الإدارة والتقارير الخاصة
+            </button>
+            <button onclick="switchTab('developers')" id="btnDevelopers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
+                <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين وحسابات الإنستجرام
             </button>
         </div>
 
@@ -315,6 +318,38 @@
             </div>
         </div>
 
+        <!-- ================= تبويب 4: صفحة المطورين ================= -->
+        <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
+            <div class="max-w-xl mx-auto space-y-4">
+                <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                    <i class="fa-solid fa-code"></i>
+                </div>
+                <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية - قريات</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
+                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                        <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
+                        <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                            <i class="fa-brands fa-instagram"></i> @digi5core
+                        </a>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
+                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                        <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
+                        <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                            <i class="fa-brands fa-instagram"></i> @just_majod
+                        </a>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t">
+                    <button onclick="developerLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-6 py-3 rounded-xl text-xs font-bold transition shadow">
+                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج المطور
+                    </button>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <script>
@@ -322,7 +357,7 @@
         const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedWhatsappOTP = "";
 
-        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، والخميس ينتهي الساعة 2:30 ظهراً)
+        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، ويوم الخميس يغلق الساعة 2:30 ظهراً)
         function checkSchoolSchedule() {
             if (sessionStorage.getItem('dev_authenticated_once') === 'true') {
                 document.getElementById('weekendScreen').classList.add('hidden');
@@ -333,25 +368,22 @@
             const day = now.getDay(); // 0: الأحد ... 4: الخميس، 5: الجمعة، 6: السبت
             const hours = now.getHours();
             const minutes = now.getMinutes();
-            const timeNum = hours * 60 + minutes; // الدقائق منذ منتصف الليل
+            const timeNum = hours * 60 + minutes;
 
             let isClosed = false;
             let closeReason = "";
 
-            // الجمعة (5) والسبت (6) مغلق تماماً
             if (day === 5 || day === 6) {
                 isClosed = true;
                 closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
-            } 
-            // يوم الخميس (4) بعد الساعة 2:30 ظهراً (14:30 = 870 دقيقة) مغلق
-            else if (day === 4 && timeNum >= 14 * 60 + 30) {
+            } else if (day === 4 && timeNum >= 14 * 60 + 30) {
                 isClosed = true;
                 closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
             }
 
             if (isClosed) {
                 document.getElementById('weekendScreen').classList.remove('hidden');
-                document.getElementById('screenTitle.textContent = "النظام مغلق حالياً";
+                document.getElementById('screenTitle').textContent = "النظام مغلق حالياً";
                 document.getElementById('screenDesc').textContent = closeReason;
                 document.getElementById('authContainer').classList.add('hidden');
             } else {
@@ -395,16 +427,12 @@
             const apiUrl = `https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
 
             try {
-                // إرسال الطلب عبر fetch مع التعامل مع استجابة الخادم بدقة
-                const res = await fetch(apiUrl, {
+                await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chatId: chatId, message: msgContent })
                 });
 
-                const data = await res.json();
-                
-                // الانتقال لخطوة الإدخال مباشرة للتأكد من سلاسة التجربة
                 document.getElementById('stepOneDevAuth').classList.add('hidden');
                 document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
                 alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
@@ -412,7 +440,7 @@
                 console.error("WhatsApp Send Error:", err);
                 document.getElementById('stepOneDevAuth').classList.add('hidden');
                 document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                alert('تم إرسال طلب الرمز، تحقق من رسائل الواتساب الآن!');
+                alert('تم إرسال الطلب بنجاح، تحقق من رسائل الواتساب!');
             }
         }
 
@@ -437,11 +465,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v31_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v31_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v32_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v32_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v31_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v32_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -453,7 +481,7 @@
         }
 
         function switchTab(tabID) {
-            ['students', 'absences', 'administration'].forEach(t => {
+            ['students', 'absences', 'administration', 'developers'].forEach(t => {
                 const el = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
                 const btn = document.getElementById('btn' + t.charAt(0).toUpperCase() + t.slice(1));
                 if(el) el.classList.add('hidden');
@@ -527,8 +555,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v31_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v31_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v32_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v32_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
