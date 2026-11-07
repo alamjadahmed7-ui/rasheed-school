@@ -114,7 +114,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر:</label>
+                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (يقبل أي رقم محلي أو دولي):</label>
                             <div class="flex items-center border rounded-xl bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
                                 <span class="bg-slate-200 text-slate-700 font-bold px-3 py-2.5 text-xs border-l">+968</span>
                                 <input type="text" id="newParentPhone" required placeholder="مثال: 98123456" class="w-full p-2.5 bg-transparent outline-none font-bold">
@@ -201,7 +201,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> حفظ ورصد الحالة تلقائياً
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال تلقائي عبر Green API
                         </button>
                     </form>
                 </div>
@@ -317,9 +317,6 @@
         <span id="toastMsg">تم الإرسال بنجاح!</span>
     </div>
 
-    <!-- عنصر مخفي لإرسال الطلبات بالخلفية بدون تعليق أو أخطاء متصفح -->
-    <iframe name="hidden_iframe" id="hidden_iframe" class="hidden"></iframe>
-
     <!-- منطقة طباعة التقرير الخفية -->
     <div id="printArea" class="hidden p-8 text-right font-sans">
         <div class="text-center border-b-2 border-slate-900 pb-4 mb-6">
@@ -343,7 +340,7 @@
 
         <div class="flex justify-between items-center mt-12 pt-6 border-t border-slate-400 text-xs font-bold">
             <div>اعتماد الأخصائي الاجتماعي: ..................</div>
-            <div>اعتماد إدارة المدرسة: .........للـه</div>
+            <div>اعتماد إدارة المدرسة: ..................</div>
         </div>
     </div>
 
@@ -378,11 +375,12 @@
             return temp.innerHTML;
         }
 
-        function showToast(msg) {
+        function showToast(msg, isError = false) {
             const toast = document.getElementById('toastNotification');
+            toast.className = `fixed bottom-5 left-5 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3 border z-50 ${isError ? 'bg-rose-600 border-rose-400' : 'bg-emerald-600 border-emerald-400'}`;
             document.getElementById('toastMsg').textContent = msg;
             toast.classList.remove('hidden');
-            setTimeout(() => { toast.classList.add('hidden'); }, 3500);
+            setTimeout(() => { toast.classList.add('hidden'); }, 4000);
         }
 
         function switchTab(tabID) {
@@ -401,6 +399,7 @@
             e.preventDefault();
             let rawPhone = document.getElementById('newParentPhone').value.trim();
             let formattedPhone = rawPhone.replace(/[^0-9]/g, '');
+            // دمج رمز الدولة 968 افتراضياً إذا دخل الرقم محلياً
             if (!formattedPhone.startsWith('968') && formattedPhone.length === 8) {
                 formattedPhone = '968' + formattedPhone;
             }
@@ -416,19 +415,32 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال الآلي المستقرة بالخلفية عبر Green API بدون تعليق
-        function sendGreenApiSilent(phone, messageText) {
+        // دالة الإرسال الآلي عبر Green API لأي رقم في العالم بدون إظهار أي أخطاء مزعجة
+        async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
-            let chatId = cleanPhone + "@c.us";
-            let url = `https://7107.api.greenapi.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
+            const chatId = cleanPhone + "@c.us";
+            const url = `https://7107.api.greenapi.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
 
-            // استخدام طريقة آمنة لا تتعلق ولا تسبب خطأ CORS
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chatId: chatId, message: messageText }),
-                mode: 'no-cors'
-            }).catch(() => {});
+            const data = {
+                chatId: chatId,
+                message: messageText
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                if (response.ok) {
+                    showToast('✅ تم رصد الحالة وإرسال التنبيه تلقائياً عبر الواتساب بنجاح!');
+                } else {
+                    showToast('⚠️ تم رصد الحالة محلياً.', false);
+                }
+            } catch (error) {
+                console.error('Green API Error:', error);
+                showToast('✅ تم رصد الحالة وحفظها بنجاح.');
+            }
         }
 
         document.getElementById('absenceForm').addEventListener('submit', function(e) {
@@ -451,11 +463,12 @@
                                  `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) خلال (*${lesson}*) بتاريخ ${todayStr}.\n\n` +
                                  `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
-                // إرسال فوري وصامت في الخلفية
-                sendGreenApiSilent(student.phone, msgContent);
+                // إرسال آلي صامت لأي رقم
+                sendGreenApiMessage(student.phone, msgContent);
+            } else {
+                showToast('تم رصد الحالة بنجاح');
             }
 
-            showToast('✅ تم رصد الحالة وإرسال التنبيه تلقائياً بنجاح!');
             renderAll();
             document.getElementById('searchStudentInput').value = '';
             filterAbsenceDropdown();
