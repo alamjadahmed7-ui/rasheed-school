@@ -201,7 +201,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري للواتساب
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري للواتساب عبر البوت
                         </button>
                     </form>
                 </div>
@@ -314,7 +314,7 @@
     <!-- إشعار الحالة -->
     <div id="toastNotification" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm hidden flex items-center gap-3 border border-emerald-400 z-50">
         <i class="fa-solid fa-circle-check text-xl"></i>
-        <span id="toastMsg">تم رصد الحالة وإرسال التنبيه!</span>
+        <span id="toastMsg">تم رصد الحالة وإرسال التنبيه عبر البوت!</span>
     </div>
 
     <!-- منطقة طباعة التقرير الخفية -->
@@ -368,7 +368,6 @@
 
         if (absStorage) {
             if (nowTime - absStorage.timestamp >= 24 * 60 * 60 * 1000) {
-                // مر أكثر من 24 ساعة، يتم تفريغ السجل
                 absences = [];
                 localStorage.setItem('rashid_v39_absences_meta', JSON.stringify({ timestamp: nowTime, records: [] }));
             } else {
@@ -424,7 +423,7 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال عبر Green API مع إمكانية الفتح المباشر في حال واجهت الشبكة مشكلة
+        // دالة الإرسال عبر البوت الرقمي (Green API) لأي رقم في العالم بحرية تامة
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
             const chatId = cleanPhone + "@c.us";
@@ -443,17 +442,17 @@
                 });
                 
                 if (response.ok) {
-                    showToast('✅ تم رصد الحالة وإرسال التنبيه تلقائياً عبر الواتساب بنجاح!');
+                    showToast('🤖✅ تم إرسال تنبيه البوت الرقمي لولي الأمر بنجاح!');
                 } else {
                     const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
                     window.open(waLink, '_blank');
-                    showToast('⚠️ تم فتح الواتساب للإرسال الفوري لولي الأمر.', false);
+                    showToast('⚠️ تم فتح رابط الواتساب المباشر للإرسال الفوري.', false);
                 }
             } catch (error) {
                 console.error('Green API Error:', error);
                 const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
                 window.open(waLink, '_blank');
-                showToast('🚀 تم رصد الحالة وفتح رسالة الواتساب للإرسال المباشر.');
+                showToast('🚀 تم فتح رابط الواتساب للإرسال المباشر.');
             }
         }
 
@@ -487,7 +486,6 @@
             filterAbsenceDropdown();
         });
 
-        // كلمة المرور الجديدة
         function checkPassword(p) {
             return p === "rashid@12342026";
         }
