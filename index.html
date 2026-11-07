@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة التحقق للمطورين (أو الإغلاق الرسمي لعطلة نهاية الأسبوع والخميس بعد 2:30) -->
+    <!-- شاشة التحقق للمطورين (مع وضع التطوير النشط للاختبار والتعديل في أي وقت) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
@@ -116,7 +116,7 @@
                     </div>
                     <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
                         <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">دوام رسمي</span>
+                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">وضع التطوير</span>
                     </div>
                 </div>
             </div>
@@ -357,7 +357,7 @@
         const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
         let generatedWhatsappOTP = "";
 
-        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، ويوم الخميس يغلق الساعة 2:30 ظهراً)
+        // فحص جدول الدوام الرسمي مع تفعيل وضع تجاوز التطوير لاختبار النظام في عطلة نهاية الأسبوع
         function checkSchoolSchedule() {
             if (sessionStorage.getItem('dev_authenticated_once') === 'true') {
                 document.getElementById('weekendScreen').classList.add('hidden');
@@ -373,12 +373,18 @@
             let isClosed = false;
             let closeReason = "";
 
-            if (day === 5 || day === 6) {
-                isClosed = true;
-                closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
-            } else if (day === 4 && timeNum >= 14 * 60 + 30) {
-                isClosed = true;
-                closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
+            // تعليق الإغلاق التلقائي مؤقتاً في وضع التطوير لتستطيع الدخول والتعديل بحرية
+            // (أو يمكنك تفعيله لاحقاً بالاعتماد على الأيام الرسمية الأحد-الخميس وإغلاق الخميس 2:30 ظهراً)
+            let devModeOverride = true; // مفعل حالياً للتطوير والاختبار
+
+            if (!devModeOverride) {
+                if (day === 5 || day === 6) {
+                    isClosed = true;
+                    closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
+                } else if (day === 4 && timeNum >= 14 * 60 + 30) {
+                    isClosed = true;
+                    closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
+                }
             }
 
             if (isClosed) {
@@ -465,11 +471,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v32_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v32_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v33_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v33_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v32_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v33_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -555,8 +561,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v32_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v32_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v33_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v33_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
