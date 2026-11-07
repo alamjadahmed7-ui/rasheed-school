@@ -15,460 +15,287 @@
         .gradient-btn { background: linear-gradient(135deg, #4f46e5 0%, #3730a3 100%); }
     </style>
 </head>
-<body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
+<body class="bg-slate-100 text-slate-800 min-h-screen pb-6 flex flex-col justify-between">
 
-    <!-- شاشة التحقق للمطورين الآمنة -->
-    <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
-        <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
-            <div class="text-center space-y-2">
-                <div class="text-emerald-500 text-5xl inline-block bg-emerald-50 p-3 rounded-2xl">
-                    <i class="fa-brands fa-whatsapp"></i>
-                </div>
-                <h2 id="screenTitle" class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين الآمن - WhatsApp</h2>
-                <p id="screenDesc" class="text-slate-600 text-xs font-bold leading-relaxed">
-                    اختر الحساب ورقم الواتساب، واضغط لإرسال واستلام رمز الـ OTP المنسق فوراً.
-                </p>
-            </div>
-            
-            <div id="authContainer" class="pt-3 border-t space-y-3">
-                <div id="stepOneDevAuth" class="space-y-3">
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">اختر اسم المطور:</label>
-                        <select id="devNameSelect" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500">
-                            <option value="أمجد البلوشي (@just_majod)">أمجد البلوشي (@just_majod)</option>
-                            <option value="أ. عبد الرحمن البلوشي (@digi5core)">أ. عبد الرحمن البلوشي (@digi5core)</option>
-                        </select>
+    <div>
+        <!-- رأس الصفحة -->
+        <header class="glass-header text-white shadow-2xl border-b-4 border-amber-400">
+            <div class="max-w-7xl mx-auto p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-5">
+                    <div class="bg-amber-400/20 p-4 rounded-2xl border border-amber-400/30 text-amber-300 text-4xl shadow-inner">
+                        <i class="fa-solid fa-school"></i>
                     </div>
-
                     <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">رقم الواتساب لاستلام الرمز (OTP):</label>
-                        <div class="flex gap-2">
-                            <select id="countryCodeSelect" class="w-32 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-center">
-                                <option value="968" selected>🇴🇲 +968 (عُمان)</option>
-                                <option value="971">🇦🇪 +971 (الإمارات)</option>
-                                <option value="966">🇸🇦 +966 (السعودية)</option>
-                                <option value="974">🇶🇦 +974 (قطر)</option>
-                                <option value="973">🇧🇭 +973 (البحرين)</option>
-                                <option value="965">🇰🇼 +965 (الكويت)</option>
-                            </select>
-                            <input type="text" id="devWhatsappPhone" placeholder="92033413" class="flex-1 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-right">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-0.5 rounded-full shadow">سلطنة عُمان - قريات</span>
+                            <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rashed-bin-alwaleed.co</span>
+                        </div>
+                        <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
+                        <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="grid grid-cols-3 gap-2">
+                        <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                            <span class="block text-[10px] text-indigo-200">الطلاب</span>
+                            <span id="statTotalStudents" class="text-xl font-black text-amber-300">0</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                            <span class="block text-[10px] text-indigo-200">اليوم</span>
+                            <span id="statAbsences" class="text-xl font-black text-rose-400">0</span>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
+                            <span class="block text-[10px] text-indigo-200">الحالة</span>
+                            <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">مفتوح دائماً</span>
                         </div>
                     </div>
-
-                    <button onclick="requestWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2 mt-2">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> إرسال رمز الـ OTP عبر الواتساب
-                    </button>
-                </div>
-
-                <div id="stepTwoOtpAuth" class="space-y-3 hidden bg-emerald-50/50 p-4 rounded-2xl border border-emerald-200">
-                    <div class="text-center space-y-1">
-                        <span class="text-xs text-emerald-900 font-bold block">تم فتح محادثة الواتساب للتو!</span>
-                        <p class="text-[11px] text-slate-500 mt-1">اضغط إرسال في الواتساب، ثم انسخ الرمز المكون من 6 أرقام واكتبه هنا.</p>
-                    </div>
-                    <div>
-                        <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (OTP):</label>
-                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
-                    </div>
-                    <button onclick="verifyWhatsappOTP()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-3 rounded-xl text-xs font-bold transition shadow">
-                        ✅ تأكيد الرمز والدخول للنظام
-                    </button>
-                    <button onclick="resetAuthStep()" class="w-full text-slate-500 text-xs font-bold py-1 hover:underline">
-                        إعادة المحاولة
-                    </button>
-                </div>
-
-                <div class="pt-2">
-                    <button onclick="developerLogout()" class="w-full bg-rose-50 text-rose-700 border border-rose-200 px-4 py-2.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition">
-                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج الكامل
-                    </button>
                 </div>
             </div>
-        </div>
-    </div>
+        </header>
 
-    <!-- رأس الصفحة -->
-    <header class="glass-header text-white shadow-2xl border-b-4 border-amber-400">
-        <div class="max-w-7xl mx-auto p-6 md:p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div class="flex items-center gap-5">
-                <div class="bg-amber-400/20 p-4 rounded-2xl border border-amber-400/30 text-amber-300 text-4xl shadow-inner">
-                    <i class="fa-solid fa-school"></i>
-                </div>
-                <div>
-                    <div class="flex items-center gap-2 mb-1">
-                        <span class="bg-amber-400 text-slate-950 font-black text-xs px-3 py-0.5 rounded-full shadow">سلطنة عُمان - قريات</span>
-                        <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rashed-bin-alwaleed.co</span>
-                    </div>
-                    <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
-                </div>
-            </div>
+        <!-- محتوى التبويبات -->
+        <div class="max-w-7xl mx-auto px-4 mt-8 space-y-6">
 
-            <div class="flex items-center gap-3">
-                <button onclick="developerLogout()" class="bg-white/10 hover:bg-white/20 text-amber-300 border border-amber-400/30 px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center gap-2">
-                    <i class="fa-solid fa-right-from-bracket"></i> خروج المطورين
+            <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-2">
+                <button onclick="switchTab('students')" id="btnStudents" class="px-5 py-3 font-bold text-sm rounded-xl bg-indigo-900 text-white shadow transition flex items-center gap-2">
+                    <i class="fa-solid fa-users"></i> إدارة وقوائم الطلاب
                 </button>
-                <div class="grid grid-cols-3 gap-2">
-                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
-                        <span class="block text-[10px] text-indigo-200">الطلاب</span>
-                        <span id="statTotalStudents" class="text-xl font-black text-amber-300">0</span>
+                <button onclick="switchTab('absences')" id="btnAbsences" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
+                    <i class="fa-solid fa-clipboard-user"></i> رصد الغياب والحصص
+                </button>
+                <button onclick="switchTab('administration')" id="btnAdministration" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
+                    <i class="fa-solid fa-user-tie text-amber-600"></i> لوحة الإدارة والتقارير الخاصة
+                </button>
+                <button onclick="switchTab('developers')" id="btnDevelopers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
+                    <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين وحسابات الإنستجرام
+                </button>
+            </div>
+
+            <!-- تبويب 1: إدارة الطلاب -->
+            <div id="tabStudents" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
+                    <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-user-plus text-indigo-600"></i> إضافة طالب جديد للقائمة
+                    </h3>
+                    <form id="addStudentForm" class="space-y-3 text-xs font-semibold">
+                        <div>
+                            <label class="block mb-1 text-slate-600">اسم الطالب الثلاثي والقبيلة:</label>
+                            <input type="text" id="newStudentName" required placeholder="أدخل اسم الطالب..." class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-slate-600">الصف والشعبة:</label>
+                            <select id="newStudentClass" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                                <option value="">اختر الصف والشعبة...</option>
+                                <option value="العاشر / 1">العاشر / 1</option><option value="العاشر / 2">العاشر / 2</option><option value="العاشر / 3">العاشر / 3</option>
+                                <option value="الحادي عشر / 1">الحادي عشر / 1</option><option value="الحادي عشر / 2">الحادي عشر / 2</option>
+                                <option value="الثاني عشر / 1">الثاني عشر / 1</option><option value="الثاني عشر / 2">الثاني عشر / 2</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (للبوت):</label>
+                            <input type="text" id="newParentPhone" required placeholder="مثال: 968xxxxxxxx" class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        </div>
+                        <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold shadow transition">
+                            حفظ الطالب في القائمة
+                        </button>
+                    </form>
+
+                    <div class="pt-2 border-t flex flex-col gap-2">
+                        <button onclick="clearAllStudents()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2.5 rounded-xl text-xs transition border border-rose-200">
+                            <i class="fa-solid fa-trash"></i> تفريغ القائمة بالكامل
+                        </button>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
-                        <span class="block text-[10px] text-indigo-200">اليوم</span>
-                        <span id="statAbsences" class="text-xl font-black text-rose-400">0</span>
+                </div>
+
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
+                        <h3 class="font-bold text-slate-800">📋 قوام الطلاب المسجلين حالياً</h3>
+                        <div class="flex gap-2 w-full sm:w-auto">
+                            <select id="filterClassSelect" onchange="renderAll()" class="p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
+                                <option value="الكل">جميع الصفوف والشعب</option>
+                                <option value="العاشر">جميع شعب العاشر</option>
+                                <option value="الحادي عشر">جميع شعب الحادي عشر</option>
+                                <option value="الثاني عشر">جميع شعب الثاني عشر</option>
+                            </select>
+                            <span id="studentCountBadge" class="bg-indigo-100 text-indigo-800 text-xs px-3 py-2 rounded-xl font-bold whitespace-nowrap">0 طالب</span>
+                        </div>
                     </div>
-                    <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
-                        <span class="block text-[10px] text-indigo-200">الحالة</span>
-                        <span id="timerBadge" class="text-[10px] font-bold text-emerald-300 block mt-1">دوام رسمي</span>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-100 text-slate-700 font-bold">
+                                <tr>
+                                    <th class="p-3">#</th>
+                                    <th class="p-3">اسم الطالب</th>
+                                    <th class="p-3">الصف والشعبة</th>
+                                    <th class="p-3">هاتف ولي الأمر</th>
+                                    <th class="p-3 text-center">الإجراءات</th>
+                                </tr>
+                            </thead>
+                            <tbody id="studentsTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-        </div>
-    </header>
 
-    <!-- محتوى التبويبات -->
-    <div class="max-w-7xl mx-auto px-4 mt-8 space-y-6">
+            <!-- تبويب 2: رصد الغياب -->
+            <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
+                    <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-user text-rose-600"></i> نظام رصد الغياب (بحث سريع)
+                    </h3>
+                    <form id="absenceForm" class="space-y-3 text-xs font-semibold">
+                        <div>
+                            <label class="block mb-1 text-slate-600 font-bold">🔍 ابحث عن اسم الطالب:</label>
+                            <input type="text" id="searchStudentInput" placeholder="اكتب للبحث السريع..." oninput="filterAbsenceDropdown()" class="w-full p-2.5 mb-2 border rounded-xl bg-indigo-50/50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                            <select id="absStudentSelect" size="4" required class="w-full p-2 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-xs"></select>
+                        </div>
 
-        <div class="flex flex-wrap gap-2 border-b border-slate-300 pb-2">
-            <button onclick="switchTab('students')" id="btnStudents" class="px-5 py-3 font-bold text-sm rounded-xl bg-indigo-900 text-white shadow transition flex items-center gap-2">
-                <i class="fa-solid fa-users"></i> إدارة وقوائم الطلاب
-            </button>
-            <button onclick="switchTab('absences')" id="btnAbsences" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
-                <i class="fa-solid fa-clipboard-user"></i> رصد الغياب والحصص
-            </button>
-            <button onclick="switchTab('administration')" id="btnAdministration" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
-                <i class="fa-solid fa-user-tie text-amber-600"></i> لوحة الإدارة والتقارير الخاصة
-            </button>
-            <button onclick="switchTab('developers')" id="btnDevelopers" class="px-5 py-3 font-bold text-sm rounded-xl bg-white text-slate-600 hover:bg-slate-200 transition flex items-center gap-2">
-                <i class="fa-solid fa-code text-indigo-600"></i> صفحة المطورين وحسابات الإنستجرام
-            </button>
-        </div>
+                        <div>
+                            <label class="block mb-1 text-indigo-900 font-black">📌 حدد رقم الحصة الدراسية:</label>
+                            <select id="absLesson" required class="w-full p-2.5 border-2 border-indigo-400 rounded-xl bg-indigo-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-indigo-950">
+                                <option value="الحصة الأولى">الحصة الأولى (1)</option>
+                                <option value="الحصة الثانية">الحصة الثانية (2)</option>
+                                <option value="الحصة الثالثة">الحصة الثالثة (3)</option>
+                                <option value="الحصة الرابعة">الحصة الرابعة (4)</option>
+                                <option value="الحصة الخامسة">الحصة الخامسة (5)</option>
+                                <option value="الحصة السادسة">الحصة السادسة (6)</option>
+                            </select>
+                        </div>
 
-        <!-- تبويب 1: إدارة الطلاب -->
-        <div id="tabStudents" class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
-                <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-indigo-600"></i> إضافة طالب جديد للقائمة
-                </h3>
-                <form id="addStudentForm" class="space-y-3 text-xs font-semibold">
+                        <div>
+                            <label class="block mb-1 text-slate-900 font-black">⚠️ حدد حالة الغياب أو التأخير:</label>
+                            <select id="absType" required class="w-full p-3 border-2 border-rose-300 rounded-xl bg-rose-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-rose-800 text-sm">
+                                <option value="غائب (بدون عذر)">🔴 غائب (بدون عذر)</option>
+                                <option value="هروب من الحصة">⚠️ هروب من الحصة</option>
+                                <option value="تأخير صباحي">🟡 تأخير صباحي</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
+                            <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال تلقائي عبر Green API
+                        </button>
+                    </form>
+                </div>
+
+                <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
+                    <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
+                        <h3 class="font-bold text-slate-800">📊 سجل الحالات والغياب المسجلة اليوم</h3>
+                        <div class="flex items-center gap-3">
+                            <span id="currentDateBadge" class="bg-slate-100 text-slate-700 font-mono text-xs px-3 py-1 rounded-lg font-bold"></span>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-right text-xs">
+                            <thead class="bg-slate-100 text-slate-700 font-bold">
+                                <tr>
+                                    <th class="p-3">اسم الطالب</th>
+                                    <th class="p-3">الصف والشعبة</th>
+                                    <th class="p-3">الحصة والحالة</th>
+                                    <th class="p-3 text-center">إجراء</th>
+                                </tr>
+                            </thead>
+                            <tbody id="absencesTableBody" class="divide-y divide-slate-100"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- تبويب 3: لوحة الإدارة -->
+            <div id="tabAdministration" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden">
+                <div class="border-b pb-4 flex items-center justify-between">
                     <div>
-                        <label class="block mb-1 text-slate-600">اسم الطالب الثلاثي والقبيلة:</label>
-                        <input type="text" id="newStudentName" required placeholder="أدخل اسم الطالب..." class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                        <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">🔒 لوحة خاصة</span>
+                        <h3 class="text-xl font-black text-slate-900 mt-1">📑 تقارير المتابعة الرسمية للإدارة والأخصائي</h3>
                     </div>
-                    <div>
-                        <label class="block mb-1 text-slate-600">الصف والشعبة:</label>
-                        <select id="newStudentClass" required class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
-                            <option value="">اختر الصف والشعبة...</option>
-                            <option value="العاشر / 1">العاشر / 1</option><option value="العاشر / 2">العاشر / 2</option><option value="العاشر / 3">العاشر / 3</option>
-                            <option value="الحادي عشر / 1">الحادي عشر / 1</option><option value="الحادي عشر / 2">الحادي عشر / 2</option>
-                            <option value="الثاني عشر / 1">الثاني عشر / 1</option><option value="الثاني عشر / 2">الثاني عشر / 2</option>
-                        </select>
+                    <div class="text-right">
+                        <span class="block text-xs text-slate-500">جهة الاختصاص</span>
+                        <span class="font-bold text-indigo-900 text-sm">مدرسة راشد بن الوليد</span>
                     </div>
-                    <div>
-                        <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (للبوت):</label>
-                        <input type="text" id="newParentPhone" required placeholder="مثال: 968xxxxxxxx" class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
-                    </div>
-                    <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold shadow transition">
-                        حفظ الطالب في القائمة
-                    </button>
-                </form>
+                </div>
 
-                <div class="pt-2 border-t flex flex-col gap-2">
-                    <button onclick="clearAllStudents()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2.5 rounded-xl text-xs transition border border-rose-200">
-                        <i class="fa-solid fa-trash"></i> تفريغ القائمة بالكامل
-                    </button>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-2xl text-white shadow-lg space-y-3">
+                        <div class="flex items-center justify-between text-amber-400 text-xl">
+                            <i class="fa-solid fa-user-tie"></i>
+                            <span class="text-xs bg-amber-400/20 px-2.5 py-1 rounded-lg font-bold border border-amber-400/30">المدير العام</span>
+                        </div>
+                        <h4 class="font-bold text-lg text-amber-300">سعادة الأستاذ / سعيد</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
+                            إجمالي قيد المدرسة الحالي هو (<strong class="text-amber-300" id="adminTotalStudents">0</strong>) طالب.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-slate-800 to-indigo-950 p-6 rounded-2xl text-white shadow-lg space-y-3 border border-indigo-500/30">
+                        <div class="flex items-center justify-between text-indigo-300 text-xl">
+                            <i class="fa-solid fa-user-gear"></i>
+                            <span class="text-xs bg-indigo-500/20 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30">نائب المدير</span>
+                        </div>
+                        <h4 class="font-bold text-lg text-indigo-200">الفاضل الأستاذ / عادل</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
+                            إجمالي سجلات الغياب المرصودة اليوم هو (<strong class="text-indigo-300" id="adminTotalAbsences">0</strong>) حالة.
+                        </p>
+                    </div>
+
+                    <div class="bg-gradient-to-br from-emerald-950 to-slate-900 p-6 rounded-2xl text-white shadow-lg space-y-3 border border-emerald-500/30">
+                        <div class="flex items-center justify-between text-emerald-400 text-xl">
+                            <i class="fa-solid fa-user-group"></i>
+                            <span class="text-xs bg-emerald-500/20 px-2.5 py-1 rounded-lg font-bold border border-emerald-400/30">الأخصائي الاجتماعي</span>
+                        </div>
+                        <h4 class="font-bold text-lg text-emerald-300">الأستاذ / ناصر</h4>
+                        <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
+                            تم التدقيق في كافة الحالات المسجلة لضمان التدخل التربوي السريع.
+                        </p>
+                    </div>
                 </div>
             </div>
 
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
-                    <h3 class="font-bold text-slate-800">📋 قوام الطلاب المسجلين حالياً</h3>
-                    <div class="flex gap-2 w-full sm:w-auto">
-                        <select id="filterClassSelect" onchange="renderAll()" class="p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
-                            <option value="الكل">جميع الصفوف والشعب</option>
-                            <option value="العاشر">جميع شعب العاشر</option>
-                            <option value="الحادي عشر">جميع شعب الحادي عشر</option>
-                            <option value="الثاني عشر">جميع شعب الثاني عشر</option>
-                        </select>
-                        <span id="studentCountBadge" class="bg-indigo-100 text-indigo-800 text-xs px-3 py-2 rounded-xl font-bold whitespace-nowrap">0 طالب</span>
+            <!-- تبويب 4: صفحة المطورين -->
+            <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
+                <div class="max-w-xl mx-auto space-y-4">
+                    <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
+                        <i class="fa-solid fa-code"></i>
+                    </div>
+                    <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية - قريات</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
+                            <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                            <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
+                            <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                                <i class="fa-brands fa-instagram"></i> @digi5core
+                            </a>
+                        </div>
+                        <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
+                            <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
+                            <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
+                            <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                                <i class="fa-brands fa-instagram"></i> @just_majod
+                            </a>
+                        </div>
                     </div>
                 </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-xs">
-                        <thead class="bg-slate-100 text-slate-700 font-bold">
-                            <tr>
-                                <th class="p-3">#</th>
-                                <th class="p-3">اسم الطالب</th>
-                                <th class="p-3">الصف والشعبة</th>
-                                <th class="p-3">هاتف ولي الأمر</th>
-                                <th class="p-3 text-center">الإجراءات</th>
-                            </tr>
-                        </thead>
-                        <tbody id="studentsTableBody" class="divide-y divide-slate-100 font-medium"></tbody>
-                    </table>
-                </div>
             </div>
+
         </div>
-
-        <!-- تبويب 2: رصد الغياب -->
-        <div id="tabAbsences" class="grid grid-cols-1 lg:grid-cols-3 gap-6 hidden">
-            <div class="bg-white p-6 rounded-2xl shadow-sm border border-slate-200 h-fit space-y-4">
-                <h3 class="font-bold text-slate-800 border-b pb-3 flex items-center gap-2">
-                    <i class="fa-solid fa-clipboard-user text-rose-600"></i> نظام رصد الغياب (بحث سريع)
-                </h3>
-                <form id="absenceForm" class="space-y-3 text-xs font-semibold">
-                    <div>
-                        <label class="block mb-1 text-slate-600 font-bold">🔍 ابحث عن اسم الطالب:</label>
-                        <input type="text" id="searchStudentInput" placeholder="اكتب للبحث السريع..." oninput="filterAbsenceDropdown()" class="w-full p-2.5 mb-2 border rounded-xl bg-indigo-50/50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
-                        <select id="absStudentSelect" size="4" required class="w-full p-2 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-xs"></select>
-                    </div>
-
-                    <div>
-                        <label class="block mb-1 text-indigo-900 font-black">📌 حدد رقم الحصة الدراسية:</label>
-                        <select id="absLesson" required class="w-full p-2.5 border-2 border-indigo-400 rounded-xl bg-indigo-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold text-indigo-950">
-                            <option value="الحصة الأولى">الحصة الأولى (1)</option>
-                            <option value="الحصة الثانية">الحصة الثانية (2)</option>
-                            <option value="الحصة الثالثة">الحصة الثالثة (3)</option>
-                            <option value="الحصة الرابعة">الحصة الرابعة (4)</option>
-                            <option value="الحصة الخامسة">الحصة الخامسة (5)</option>
-                            <option value="الحصة السادسة">الحصة السادسة (6)</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label class="block mb-1 text-slate-900 font-black">⚠️ حدد حالة الغياب أو التأخير:</label>
-                        <select id="absType" required class="w-full p-3 border-2 border-rose-300 rounded-xl bg-rose-50 outline-none focus:ring-2 focus:ring-rose-500 font-bold text-rose-800 text-sm">
-                            <option value="غائب (بدون عذر)">🔴 غائب (بدون عذر)</option>
-                            <option value="هروب من الحصة">⚠️ هروب من الحصة</option>
-                            <option value="تأخير صباحي">🟡 تأخير صباحي</option>
-                        </select>
-                    </div>
-
-                    <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                        <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال تلقائي عبر Green API
-                    </button>
-                </form>
-            </div>
-
-            <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
-                <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
-                    <h3 class="font-bold text-slate-800">📊 سجل الحالات والغياب المسجلة اليوم</h3>
-                    <div class="flex items-center gap-3">
-                        <span id="currentDateBadge" class="bg-slate-100 text-slate-700 font-mono text-xs px-3 py-1 rounded-lg font-bold"></span>
-                    </div>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-right text-xs">
-                        <thead class="bg-slate-100 text-slate-700 font-bold">
-                            <tr>
-                                <th class="p-3">اسم الطالب</th>
-                                <th class="p-3">الصف والشعبة</th>
-                                <th class="p-3">الحصة والحالة</th>
-                                <th class="p-3 text-center">إجراء</th>
-                            </tr>
-                        </thead>
-                        <tbody id="absencesTableBody" class="divide-y divide-slate-100"></tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-
-        <!-- تبويب 3: لوحة الإدارة -->
-        <div id="tabAdministration" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden">
-            <div class="border-b pb-4 flex items-center justify-between">
-                <div>
-                    <span class="bg-amber-100 text-amber-800 text-xs px-3 py-1 rounded-full font-bold">🔒 لوحة خاصة</span>
-                    <h3 class="text-xl font-black text-slate-900 mt-1">📑 تقارير المتابعة الرسمية للإدارة والأخصائي</h3>
-                </div>
-                <div class="text-right">
-                    <span class="block text-xs text-slate-500">جهة الاختصاص</span>
-                    <span class="font-bold text-indigo-900 text-sm">مدرسة راشد بن الوليد</span>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-gradient-to-br from-indigo-900 to-slate-900 p-6 rounded-2xl text-white shadow-lg space-y-3">
-                    <div class="flex items-center justify-between text-amber-400 text-xl">
-                        <i class="fa-solid fa-user-tie"></i>
-                        <span class="text-xs bg-amber-400/20 px-2.5 py-1 rounded-lg font-bold border border-amber-400/30">المدير العام</span>
-                    </div>
-                    <h4 class="font-bold text-lg text-amber-300">سعادة الأستاذ / سعيد</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        إجمالي قيد المدرسة الحالي هو (<strong class="text-amber-300" id="adminTotalStudents">0</strong>) طالب.
-                    </p>
-                </div>
-
-                <div class="bg-gradient-to-br from-slate-800 to-indigo-950 p-6 rounded-2xl text-white shadow-lg space-y-3 border border-indigo-500/30">
-                    <div class="flex items-center justify-between text-indigo-300 text-xl">
-                        <i class="fa-solid fa-user-gear"></i>
-                        <span class="text-xs bg-indigo-500/20 px-2.5 py-1 rounded-lg font-bold border border-indigo-400/30">نائب المدير</span>
-                    </div>
-                    <h4 class="font-bold text-lg text-indigo-200">الفاضل الأستاذ / عادل</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        إجمالي سجلات الغياب المرصودة اليوم هو (<strong class="text-indigo-300" id="adminTotalAbsences">0</strong>) حالة.
-                    </p>
-                </div>
-
-                <div class="bg-gradient-to-br from-emerald-950 to-slate-900 p-6 rounded-2xl text-white shadow-lg space-y-3 border border-emerald-500/30">
-                    <div class="flex items-center justify-between text-emerald-400 text-xl">
-                        <i class="fa-solid fa-user-group"></i>
-                        <span class="text-xs bg-emerald-500/20 px-2.5 py-1 rounded-lg font-bold border border-emerald-400/30">الأخصائي الاجتماعي</span>
-                    </div>
-                    <h4 class="font-bold text-lg text-emerald-300">الأستاذ / ناصر</h4>
-                    <p class="text-xs text-slate-300 leading-relaxed border-t border-white/10 pt-3">
-                        تم التدقيق في كافة الحالات المسجلة لضمان التدخل التربوي السريع.
-                    </p>
-                </div>
-            </div>
-        </div>
-
-        <!-- تبويب 4: صفحة المطورين -->
-        <div id="tabDevelopers" class="bg-white p-8 rounded-2xl shadow-sm border border-slate-200 space-y-6 hidden text-center">
-            <div class="max-w-xl mx-auto space-y-4">
-                <div class="w-20 h-20 bg-sky-100 text-sky-600 rounded-full flex items-center justify-center mx-auto text-3xl shadow-inner">
-                    <i class="fa-solid fa-code"></i>
-                </div>
-                <h3 class="text-2xl font-black text-slate-900">فريق تطوير المنظومة المدرسية - قريات</h3>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
-                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                        <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
-                        <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                            <i class="fa-brands fa-instagram"></i> @digi5core
-                        </a>
-                    </div>
-                    <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
-                        <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                        <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
-                        <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                            <i class="fa-brands fa-instagram"></i> @just_majod
-                        </a>
-                    </div>
-                </div>
-
-                <div class="pt-4 border-t">
-                    <button onclick="developerLogout()" class="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 px-6 py-3 rounded-xl text-xs font-bold transition shadow">
-                        <i class="fa-solid fa-right-from-bracket"></i> تسجيل خروج المطور
-                    </button>
-                </div>
-            </div>
-        </div>
-
     </div>
+
+    <!-- تذييل الصفحة (الفوتار) لحفظ الحقوق -->
+    <footer class="mt-12 bg-slate-900 text-slate-400 py-4 text-center border-t border-slate-800 text-xs font-bold">
+        <div class="max-w-7xl mx-auto px-4">
+            جميع الحقوق محفوظة &copy; تم تطويره بواسطة <span class="text-amber-400 font-black">أمجد البلوشي</span> و <span class="text-amber-400 font-black">عبد الرحمن البلوشي</span>
+        </div>
+    </footer>
 
     <!-- البرمجة والسكربتات -->
     <script>
-        const GREEN_API_ID = "710722792988";
-        const GREEN_API_TOKEN = "f38221d19e4743de99eab402c699c80287e9b5666c7c4fe2bf";
-        let generatedWhatsappOTP = "";
-
-        // فحص جدول الدوام الرسمي (من الأحد إلى الخميس، الخميس يغلق الساعة 2:30 ظهراً، والجمعة والسبت عطلة)
-        function checkSchoolSchedule() {
-            if (sessionStorage.getItem('dev_authenticated_once') === 'true') {
-                document.getElementById('weekendScreen').classList.add('hidden');
-                return;
-            }
-
-            const now = new Date();
-            const day = now.getDay(); // 0: الأحد ... 4: الخميس، 5: الجمعة، 6: السبت
-            const hours = now.getHours();
-            const minutes = now.getMinutes();
-            const timeNum = hours * 60 + minutes;
-
-            let isClosed = false;
-            let closeReason = "";
-
-            if (day === 5 || day === 6) {
-                isClosed = true;
-                closeReason = "عطلة نهاية الأسبوع (النظام مغلق يومي الجمعة والسبت).";
-            } else if (day === 4 && timeNum >= 14 * 60 + 30) {
-                isClosed = true;
-                closeReason = "انتهى الدوام المدرسي (تم إغلاق النظام يوم الخميس الساعة 2:30 ظهراً).";
-            }
-
-            if (isClosed) {
-                document.getElementById('weekendScreen').classList.remove('hidden');
-                document.getElementById('screenTitle').textContent = "النظام مغلق حالياً";
-                document.getElementById('screenDesc').textContent = closeReason;
-                document.getElementById('authContainer').classList.add('hidden');
-            } else {
-                document.getElementById('weekendScreen').classList.remove('hidden');
-            }
-        }
-
-        checkSchoolSchedule();
-
-        function developerLogout() {
-            sessionStorage.removeItem('dev_authenticated_once');
-            alert('تم تسجيل الخروج بأمان!');
-            location.reload();
-        }
-
-        function requestWhatsappOTP() {
-            let countryCode = document.getElementById('countryCodeSelect').value;
-            let phoneInput = document.getElementById('devWhatsappPhone').value.trim();
-            
-            if (!phoneInput) {
-                alert('يرجى إدخال رقم الواتساب الخاص بك أولاً!');
-                return;
-            }
-
-            let phone = phoneInput.replace(/[^0-9]/g, '');
-            if (phone.startsWith('0')) {
-                phone = phone.substring(1);
-            }
-
-            let fullPhone = countryCode + phone;
-            generatedWhatsappOTP = Math.floor(100000 + Math.random() * 900000).toString();
-            const devName = document.getElementById('devNameSelect').value;
-
-            const currentDateStr = new Date().toISOString().split('T')[0];
-            const currentTimeStr = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
-
-            // رسالة الواتساب المنسقة بدقة والمطابقة للشكل المطلوب
-            const msgContent = `🛡️ *[نظام حماية مدرسة راشد]*\n\n` +
-                               `👮‍♂️ المطور المسؤول: *${devName}*\n` +
-                               `📅 التاريخ: *${currentDateStr}*\n` +
-                               `⏰ وقت الدخول: *${currentTimeStr}*\n` +
-                               `⏱️ فترة العمل: *من 21:11 إلى 22:15*\n\n` +
-                               `🔐 رمز التحقق الثنائي (OTP) الخاص بك هو:\n` +
-                               `*${generatedWhatsappOTP}*\n\n` +
-                               `لا تشارك هذا الرمز مع أي شخص لضمان أمان النظام.\n` +
-                               `🔒 الحالة: تمت المصادقة الثنائية بنجاح عبر بوت الواتساب.`;
-
-            // فتح واتساب مباشرة لضمان وصول الرسالة بدون مشاكل الـ CORS
-            const waUrl = `https://wa.me/${fullPhone}?text=${encodeURIComponent(msgContent)}`;
-            window.open(waUrl, '_blank');
-
-            document.getElementById('stepOneDevAuth').classList.add('hidden');
-            document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-        }
-
-        function verifyWhatsappOTP() {
-            const otpInput = document.getElementById('devOtpInput').value.trim();
-            const devName = document.getElementById('devNameSelect').value;
-
-            if (otpInput === generatedWhatsappOTP && generatedWhatsappOTP !== "") {
-                sessionStorage.setItem('dev_authenticated_once', 'true');
-                document.getElementById('weekendScreen').classList.add('hidden');
-                alert(`أهلاً بك يا ${devName}، تم التحقق بنجاح والدخول إلى النظام!`);
-            } else {
-                alert('رمز التحقق غير صحيح.');
-            }
-        }
-
-        function resetAuthStep() {
-            document.getElementById('stepTwoOtpAuth').classList.add('hidden');
-            document.getElementById('stepOneDevAuth').classList.remove('hidden');
-        }
-
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v35_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v35_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v37_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v37_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v35_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v37_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -546,8 +373,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v35_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v35_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v37_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v37_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
