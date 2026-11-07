@@ -201,7 +201,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري تلقائياً عبر البوت الرقمي
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري عبر البوت الرقمي
                         </button>
                     </form>
                 </div>
@@ -351,7 +351,7 @@
         </div>
     </footer>
 
-    <!-- البرمجة والسكربتات المحدثة بالكامل -->
+    <!-- البرمجة والسكربتات المعدلة والمصححة -->
     <script>
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
@@ -422,7 +422,7 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال الآلي الحصري عبر البوت الرقمي (Green API) لأي رقم في العالم دون فتح روابط
+        // دالة الإرسال الآلي الحصري عبر البوت الرقمي (Green API) مع معالجة CORS وصيغة الرقم الصحيحة
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
             const chatId = cleanPhone + "@c.us";
@@ -436,18 +436,24 @@
             try {
                 const response = await fetch(url, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
                     body: JSON.stringify(data)
                 });
                 
-                if (response.ok) {
-                    showToast('🤖✅ تم إرسال التنبيه عبر البوت الرقمي لولي الأمر بنجاح!');
+                const result = await response.json();
+                
+                if (response.ok && (result.idMessage || result.status === 'success')) {
+                    showToast('🤖✅ تم إرسال تنبيه البوت الرقمي لولي الأمر بنجاح!');
                 } else {
-                    showToast('❌ تعذر إرسال الرسالة عبر البوت، تحقق من اتصال واجهة البوت.', true);
+                    console.error('API Response Error:', result);
+                    showToast('❌ تعذر إرسال الرسالة عبر البوت، تحقق من تفعيل الحساب والرقم.', true);
                 }
             } catch (error) {
-                console.error('Green API Error:', error);
-                showToast('❌ حدث خطأ أثناء الاتصال بالبوت الرقمي.', true);
+                console.error('Green API Connection Error:', error);
+                showToast('❌ حدث خطأ في اتصال المتصفح بالبوت (CORS/Network)، جرب متصفح آخر.', true);
             }
         }
 
