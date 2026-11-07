@@ -31,7 +31,7 @@
                             <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rashed-bin-alwaleed.co</span>
                         </div>
                         <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                        <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
+                        <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & الأمجد البلوشي</p>
                     </div>
                 </div>
 
@@ -103,14 +103,14 @@
 
                     <div class="pt-2 border-t flex flex-col gap-2">
                         <button onclick="clearAllStudents()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2.5 rounded-xl text-xs transition border border-rose-200">
-                            <i class="fa-solid fa-trash"></i> تفريغ القائمة بالكامل
+                            <i class="fa-solid fa-lock"></i> تفريغ القائمة بالكامل (محمي)
                         </button>
                     </div>
                 </div>
 
                 <div class="lg:col-span-2 bg-white p-6 rounded-2xl shadow-sm border border-slate-200 space-y-4">
                     <div class="flex flex-col sm:flex-row justify-between items-center border-b pb-3 gap-3">
-                        <h3 class="font-bold text-slate-800">📋 قوام الطلاب المسجلين حالياً</h3>
+                        <h3 class="font-bold text-slate-800">📋 قوائم الطلاب المسجلين حالياً</h3>
                         <div class="flex gap-2 w-full sm:w-auto">
                             <select id="filterClassSelect" onchange="renderAll()" class="p-2 border rounded-xl text-xs bg-slate-50 font-bold outline-none">
                                 <option value="الكل">جميع الصفوف والشعب</option>
@@ -260,16 +260,16 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4">
                         <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
                             <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                            <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
-                            <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                                <i class="fa-brands fa-instagram"></i> @digi5core
+                            <h4 class="font-black text-slate-900 text-lg">الأمجد البلوشي</h4>
+                            <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                                <i class="fa-brands fa-instagram"></i> @just_majod
                             </a>
                         </div>
                         <div class="bg-slate-50 p-5 rounded-2xl border border-sky-200 shadow-sm space-y-2">
                             <span class="bg-indigo-900 text-amber-300 text-xs px-3 py-1 rounded-full font-bold">مطور رئيسي</span>
-                            <h4 class="font-black text-slate-900 text-lg">أمجد البلوشي</h4>
-                            <a href="https://instagram.com/just_majod" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
-                                <i class="fa-brands fa-instagram"></i> @just_majod
+                            <h4 class="font-black text-slate-900 text-lg">أ. عبد الرحمن البلوشي</h4>
+                            <a href="https://instagram.com/digi5core" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-xl shadow">
+                                <i class="fa-brands fa-instagram"></i> @digi5core
                             </a>
                         </div>
                     </div>
@@ -282,7 +282,7 @@
     <!-- تذييل الصفحة (الفوتار) لحفظ الحقوق -->
     <footer class="mt-12 bg-slate-900 text-slate-400 py-4 text-center border-t border-slate-800 text-xs font-bold">
         <div class="max-w-7xl mx-auto px-4">
-            جميع الحقوق محفوظة &copy; تم تطويره بواسطة <span class="text-amber-400 font-black">أمجد البلوشي</span> و <span class="text-amber-400 font-black">عبد الرحمن البلوشي</span>
+            جميع الحقوق محفوظة &copy; تم تطويره بواسطة <span class="text-amber-400 font-black">الأمجد البلوشي</span> و <span class="text-amber-400 font-black">عبد الرحمن البلوشي</span>
         </div>
     </footer>
 
@@ -364,11 +364,29 @@
             filterAbsenceDropdown();
         });
 
+        // دوال التشفير وحماية تفريغ القائمة بكلمة مرور مخفية
+        const _k = [114, 97, 115, 104, 105, 100, 50, 48, 50, 54]; // كلمة المرور المشفرة
+        function _chk(p) {
+            if (!p || p.length !== _k.length) return false;
+            for (let i = 0; i < _k.length; i++) {
+                if (p.charCodeAt(i) !== _k[i]) return false;
+            }
+            return true;
+        }
+
         function clearAllStudents() {
-            if(confirm('هل أنت متأكد من تفريغ القائمة بالكامل؟')) {
-                students = [];
-                saveToLocalServer();
-                renderAll();
+            const pwd = prompt('🔐 منطقة محمية للإدارة!\nأدخل كلمة المرور لتأكيد تفريغ القائمة بالكامل:');
+            if (pwd === null) return;
+            
+            if (_chk(pwd)) {
+                if (confirm('⚠️ هل أنت متأكد تماماً من تفريغ كافة بيانات الطلاب المسجلة؟')) {
+                    students = [];
+                    saveToLocalServer();
+                    renderAll();
+                    alert('تم تفريغ القائمة بالكامل بنجاح.');
+                }
+            } else {
+                alert('❌ كلمة المرور غير صحيحة! تم إلغاء العملية.');
             }
         }
 
