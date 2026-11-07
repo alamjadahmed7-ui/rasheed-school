@@ -114,7 +114,7 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (يقبل أي رقم بالدنيا):</label>
+                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر:</label>
                             <div class="flex items-center border rounded-xl bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
                                 <span class="bg-slate-200 text-slate-700 font-bold px-3 py-2.5 text-xs border-l">+968</span>
                                 <input type="text" id="newParentPhone" required placeholder="مثال: 98123456" class="w-full p-2.5 bg-transparent outline-none font-bold">
@@ -351,12 +351,12 @@
         </div>
     </footer>
 
-    <!-- البرمجة والسكربتات الصحيحة 100% -->
+    <!-- البرمجة والسكربتات التلقائية بالكامل -->
     <script>
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        // معلومات GreenAPI الصحيحة والمطابقة لصورك تماماً
+        // معلومات Green API الصحيحة والمطابقة لصورتك تماماً
         const GREEN_API_ID = "710722792988";
         const GREEN_API_TOKEN = "76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7";
 
@@ -414,7 +414,7 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال الآلي للرابط الصحيح 7107
+        // دالة الإرسال الفوري الآلي عبر Green API
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
             const chatId = cleanPhone + "@c.us";
@@ -434,11 +434,11 @@
                 if (response.ok) {
                     showToast('✅ تم رصد الحالة وإرسال التنبيه تلقائياً عبر الواتساب بنجاح!');
                 } else {
-                    showToast('⚠️ تم رصد الحالة وحفظها محلياً.', false);
+                    showToast('⚠️ تم رصد الحالة، ولكن فشل إرسال الـ API.', true);
                 }
             } catch (error) {
                 console.error('Green API Error:', error);
-                showToast('✅ تم رصد الحالة وحفظها بنجاح.');
+                showToast('✅ تم رصد وحفظ الحالة بنجاح.');
             }
         }
 
