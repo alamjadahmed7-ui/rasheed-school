@@ -410,7 +410,7 @@
                 let phone = student.phone.replace(/[^0-9]/g, '');
                 if(!phone.startsWith('968') && phone.length === 8) phone = '968' + phone;
 
-                // إرسال تنبيه واتساب تلقائي مباشر كما طلبت
+                // إعادة تفعيل فتح رابط الـ wa.me المباشر كما طلبته
                 const waParentUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msgContent)}`;
                 window.open(waParentUrl, '_blank');
             }
