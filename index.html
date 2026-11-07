@@ -48,7 +48,7 @@
                             <span id="statTotalStudents" class="text-xl font-black text-amber-300">0</span>
                         </div>
                         <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
-                            <span class="block text-[10px] text-indigo-200">اليوم</span>
+                            <span class="block text-[10px] text-indigo-200">الغياب</span>
                             <span id="statAbsences" class="text-xl font-black text-rose-400">0</span>
                         </div>
                         <div class="bg-white/10 backdrop-blur-md p-2.5 px-3 rounded-xl border border-white/10 text-center">
@@ -117,7 +117,7 @@
                             <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر:</label>
                             <div class="flex items-center border rounded-xl bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
                                 <span class="bg-slate-200 text-slate-700 font-bold px-3 py-2.5 text-xs border-l">+968</span>
-                                <input type="text" id="newParentPhone" required placeholder="مثال: 98123456" class="w-full p-2.5 bg-transparent outline-none font-bold">
+                                <input type="text" id="newParentPhone" required class="w-full p-2.5 bg-transparent outline-none font-bold">
                             </div>
                         </div>
                         <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold shadow transition">
@@ -125,7 +125,7 @@
                         </button>
                     </form>
 
-                    <div class="pt-2 border-t flex flex-col gap-2">
+                    <div class="pt-2 border-t">
                         <button onclick="clearAllStudents()" class="w-full bg-rose-50 hover:bg-rose-100 text-rose-700 font-bold py-2.5 rounded-xl text-xs transition border border-rose-200">
                             <i class="fa-solid fa-lock"></i> تفريغ القائمة بالكامل (محمي)
                         </button>
@@ -201,7 +201,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال تلقائي عبر Green API
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري للواتساب
                         </button>
                     </form>
                 </div>
@@ -311,10 +311,10 @@
         </div>
     </div>
 
-    <!-- إشعار الحالة الأنيق -->
+    <!-- إشعار الحالة -->
     <div id="toastNotification" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm hidden flex items-center gap-3 border border-emerald-400 z-50">
         <i class="fa-solid fa-circle-check text-xl"></i>
-        <span id="toastMsg">تم الإرسال بنجاح!</span>
+        <span id="toastMsg">تم رصد الحالة وإرسال التنبيه!</span>
     </div>
 
     <!-- منطقة طباعة التقرير الخفية -->
@@ -344,29 +344,39 @@
         </div>
     </div>
 
-    <!-- تذييل الصفحة (الفوتار) لحفظ الحقوق -->
+    <!-- تذييل الصفحة -->
     <footer class="mt-12 bg-slate-900 text-slate-400 py-4 text-center border-t border-slate-800 text-xs font-bold">
         <div class="max-w-7xl mx-auto px-4">
             جميع الحقوق محفوظة &copy; تم تطويره بواسطة <span class="text-amber-400 font-black">الأمجد البلوشي</span> و <span class="text-amber-400 font-black">عبد الرحمن البلوشي</span>
         </div>
     </footer>
 
-    <!-- البرمجة والسكربتات التلقائية بالكامل -->
+    <!-- البرمجة والسكربتات المحدثة بالكامل -->
     <script>
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        // معلومات Green API الصحيحة والمطابقة لصورتك تماماً
         const GREEN_API_ID = "710722792988";
         const GREEN_API_TOKEN = "76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7";
 
-        let students = JSON.parse(localStorage.getItem('rashid_v37_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v37_absences_data')) || { date: todayStr, records: [] };
-        if (savedData.date !== todayStr) {
-            savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v37_absences_data', JSON.stringify(savedData));
+        let students = JSON.parse(localStorage.getItem('rashid_v39_students')) || [];
+        
+        // التحقق من المؤقت الآلي (24 ساعة) لمسح بيانات الغياب
+        let absStorage = JSON.parse(localStorage.getItem('rashid_v39_absences_meta'));
+        let nowTime = new Date().getTime();
+        let absences = [];
+
+        if (absStorage) {
+            if (nowTime - absStorage.timestamp >= 24 * 60 * 60 * 1000) {
+                // مر أكثر من 24 ساعة، يتم تفريغ السجل
+                absences = [];
+                localStorage.setItem('rashid_v39_absences_meta', JSON.stringify({ timestamp: nowTime, records: [] }));
+            } else {
+                absences = absStorage.records;
+            }
+        } else {
+            localStorage.setItem('rashid_v39_absences_meta', JSON.stringify({ timestamp: nowTime, records: [] }));
         }
-        let absences = savedData.records;
 
         function sanitizeInput(str) {
             if (!str) return '';
@@ -414,7 +424,7 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال الفوري الآلي عبر Green API
+        // دالة الإرسال عبر Green API مع إمكانية الفتح المباشر في حال واجهت الشبكة مشكلة
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
             const chatId = cleanPhone + "@c.us";
@@ -431,14 +441,19 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(data)
                 });
+                
                 if (response.ok) {
                     showToast('✅ تم رصد الحالة وإرسال التنبيه تلقائياً عبر الواتساب بنجاح!');
                 } else {
-                    showToast('⚠️ تم رصد الحالة، ولكن فشل إرسال الـ API.', true);
+                    const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
+                    window.open(waLink, '_blank');
+                    showToast('⚠️ تم فتح الواتساب للإرسال الفوري لولي الأمر.', false);
                 }
             } catch (error) {
                 console.error('Green API Error:', error);
-                showToast('✅ تم رصد وحفظ الحالة بنجاح.');
+                const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
+                window.open(waLink, '_blank');
+                showToast('🚀 تم رصد الحالة وفتح رسالة الواتساب للإرسال المباشر.');
             }
         }
 
@@ -472,21 +487,16 @@
             filterAbsenceDropdown();
         });
 
-        // دوال الحماية وتفريغ القائمة
-        const _k = [114, 97, 115, 104, 105, 100, 50, 48, 50, 54];
-        function _chk(p) {
-            if (!p || p.length !== _k.length) return false;
-            for (let i = 0; i < _k.length; i++) {
-                if (p.charCodeAt(i) !== _k[i]) return false;
-            }
-            return true;
+        // كلمة المرور الجديدة
+        function checkPassword(p) {
+            return p === "rashid@12342026";
         }
 
         function clearAllStudents() {
             const pwd = prompt('🔐 منطقة محمية للإدارة!\nأدخل كلمة المرور لتأكيد تفريغ القائمة بالكامل:');
             if (pwd === null) return;
             
-            if (_chk(pwd)) {
+            if (checkPassword(pwd)) {
                 if (confirm('⚠️ هل أنت متأكد تماماً من تفريغ كافة بيانات الطلاب المسجلة؟')) {
                     students = [];
                     saveToLocalServer();
@@ -524,8 +534,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v37_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v37_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v39_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v39_absences_meta', JSON.stringify({ timestamp: nowTime, records: absences }));
         }
 
         function deleteStudent(index) {
