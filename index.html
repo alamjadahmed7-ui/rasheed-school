@@ -198,7 +198,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> حفظ وإرسال تنبيه واتساب تلقائي
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال تلقائي عبر Green API
                         </button>
                     </form>
                 </div>
@@ -308,6 +308,12 @@
         </div>
     </div>
 
+    <!-- إشعار الحالة الأنيق -->
+    <div id="toastNotification" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm hidden flex items-center gap-3 border border-emerald-400 z-50">
+        <i class="fa-solid fa-circle-check text-xl"></i>
+        <span id="toastMsg">تم الإرسال بنجاح!</span>
+    </div>
+
     <!-- منطقة طباعة التقرير الخفية -->
     <div id="printArea" class="hidden p-8 text-right font-sans">
         <div class="text-center border-b-2 border-slate-900 pb-4 mb-6">
@@ -347,6 +353,10 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
+        // معلومات Green API الخاصة بك
+        const GREEN_API_ID = "710722792988";
+        const GREEN_API_TOKEN = "76787f6d8a7a494b862ca499f9b66567f32498a2eba5447fa7";
+
         let students = JSON.parse(localStorage.getItem('rashid_v37_students')) || [];
         let savedData = JSON.parse(localStorage.getItem('rashid_v37_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
@@ -360,6 +370,14 @@
             const temp = document.createElement('div');
             temp.textContent = str;
             return temp.innerHTML;
+        }
+
+        function showToast(msg, isError = false) {
+            const toast = document.getElementById('toastNotification');
+            toast.className = `fixed bottom-5 left-5 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm flex items-center gap-3 border z-50 ${isError ? 'bg-rose-600 border-rose-400' : 'bg-emerald-600 border-emerald-400'}`;
+            document.getElementById('toastMsg').textContent = msg;
+            toast.classList.remove('hidden');
+            setTimeout(() => { toast.classList.add('hidden'); }, 4000);
         }
 
         function switchTab(tabID) {
@@ -384,8 +402,40 @@
             saveToLocalServer();
             this.reset();
             renderAll();
-            alert('تمت إضافة الطالب وحفظه بنجاح!');
+            showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
+
+        // دالة الإرسال التلقائي الصامت في الخلفية عبر Green API
+        async function sendGreenApiMessage(phone, messageText) {
+            let cleanPhone = phone.replace(/[^0-9]/g, '');
+            if(!cleanPhone.startsWith('968') && cleanPhone.length === 8) {
+                cleanPhone = '968' + cleanPhone;
+            }
+            const chatId = cleanPhone + "@c.us";
+            const url = `https://7107.api.greenapi.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
+
+            const data = {
+                chatId: chatId,
+                message: messageText
+            };
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (response.ok) {
+                    showToast('✅ تم رصد الحالة وإرسال تنبيه الواتساب تلقائياً لولي الأمر!');
+                } else {
+                    showToast('⚠️ تم الحفظ ولكن فشل إرسال الواتساب تلقائياً عبر البوت.', true);
+                }
+            } catch (error) {
+                console.error('Green API Error:', error);
+                showToast('⚠️ تم حفظ الحالة محلياً (تأكد من اتصال الإنترنت والبوت).', true);
+            }
+        }
 
         document.getElementById('absenceForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -402,17 +452,15 @@
             absences.push({ studentName: sanitizeInput(sName), date: todayStr, type: sanitizeInput(finalRecordStr) });
             saveToLocalServer();
 
-            if(student) {
+            if(student && student.phone) {
                 let msgContent = `🤖 *[إشعار متابعة - مدرسة راشد بن الوليد]*\n\n` +
                                  `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) خلال (*${lesson}*) بتاريخ ${todayStr}.\n\n` +
                                  `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
-                let phone = student.phone.replace(/[^0-9]/g, '');
-                if(!phone.startsWith('968') && phone.length === 8) phone = '968' + phone;
-
-                // إعادة تفعيل فتح رابط الـ wa.me المباشر كما طلبته
-                const waParentUrl = `https://wa.me/${phone}?text=${encodeURIComponent(msgContent)}`;
-                window.open(waParentUrl, '_blank');
+                // استدعاء البوت للإرسال الآلي دون فتح نوافذ جديدة
+                sendGreenApiMessage(student.phone, msgContent);
+            } else {
+                showToast('تم رصد الحالة بنجاح (رقم ولي الأمر غير متوفر للإرسال)');
             }
 
             renderAll();
@@ -439,7 +487,7 @@
                     students = [];
                     saveToLocalServer();
                     renderAll();
-                    alert('تم تفريغ القائمة بالكامل بنجاح.');
+                    showToast('تم تفريغ القائمة بالكامل بنجاح.');
                 }
             } else {
                 alert('❌ كلمة المرور غير صحيحة! تم إلغاء العملية.');
