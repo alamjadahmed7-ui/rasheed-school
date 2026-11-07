@@ -17,7 +17,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-12">
 
-    <!-- شاشة التحقق للمطورين (عبر الواتساب وبدون إظهار كلمة المرور) -->
+    <!-- شاشة التحقق للمطورين (عبر الواتساب وبدون كلمة مرور) -->
     <div id="weekendScreen" class="fixed inset-0 bg-slate-900/95 z-50 flex items-center justify-center p-4 text-center hidden">
         <div class="bg-white p-5 md:p-8 rounded-3xl shadow-2xl max-w-lg w-full space-y-4 border-t-8 border-emerald-600 max-h-[92vh] overflow-y-auto text-right">
             <div class="text-center space-y-2">
@@ -42,7 +42,7 @@
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">رقم الواتساب لاستلام الرمز (OTP):</label>
-                        <input type="text" id="devWhatsappPhone" placeholder="مثال: 968xxxxxxxx" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500">
+                        <input type="text" id="devWhatsappPhone" placeholder="مثال: 92033413 أو 96892033413" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-right">
                     </div>
 
                     <button onclick="requestWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2 mt-2">
@@ -56,7 +56,7 @@
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">أدخل رمز التحقق (OTP):</label>
-                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
+                        <input type="text" id="devOtpInput" maxlength="6" placeholder="أدخل الرمز المكون من 6 أرقام..." class="w-full p-3 text-center tracking-widest text-lg font-black border rounded-xl outline-none focus:ring-2 focus:ring-emerald-500 bg-white">
                     </div>
                     <button onclick="verifyWhatsappOTP()" class="w-full bg-indigo-900 hover:bg-indigo-800 text-white py-3 rounded-xl text-xs font-bold transition shadow">
                         ✅ تأكيد الرمز والدخول للنظام
@@ -87,7 +87,7 @@
                         <span class="bg-indigo-900/80 text-amber-300 border border-indigo-700 text-xs font-mono px-3 py-0.5 rounded-full dir-ltr">🔗 rashed-bin-alwaleed.co</span>
                     </div>
                     <h1 class="text-2xl md:text-3xl font-black tracking-wide">مدرسة راشد بن الوليد للبنين (10-12)</h1>
-                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة | المطوران: أ. عبد الرحمن البلوشي & أمجد البلوشي</p>
+                    <p class="text-slate-300 text-sm mt-1 font-medium">لوحة المعلمين المبسطة</p>
                 </div>
             </div>
 
@@ -335,8 +335,11 @@
                 return;
             }
 
+            // تنظيف الرقم تلقائياً من أي رموز أو زائد (+)
             let phone = phoneInput.replace(/[^0-9]/g, '');
-            if (!phone.startsWith('968') && phone.length === 8) phone = '968' + phone;
+            if (phone.length === 8) {
+                phone = '968' + phone;
+            }
 
             generatedWhatsappOTP = Math.floor(100000 + Math.random() * 900000).toString();
             const devName = document.getElementById('devNameSelect').value;
@@ -356,7 +359,9 @@
                     body: JSON.stringify({ chatId: chatId, message: msgContent })
                 });
 
-                if (res.ok) {
+                const data = await res.json();
+
+                if (res.ok && data.idMessage) {
                     document.getElementById('stepOneDevAuth').classList.add('hidden');
                     document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
                     alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
@@ -390,11 +395,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v27_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v27_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v28_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v28_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v27_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v28_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -480,8 +485,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v27_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v27_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v28_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v28_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
