@@ -1,0 +1,15 @@
+{
+  "name": "rashid-school-absence-system",
+  "version": "2.0.0",
+  "description": "نظام إدارة الغياب والتنبيهات الآلية - مدرسة راشد بن الوليد للبنين (10-12)",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "sqlite3": "^5.1.7",
+    "dotenv": "^16.4.5",
+    "node-fetch": "^2.7.0"
+  }
+}
