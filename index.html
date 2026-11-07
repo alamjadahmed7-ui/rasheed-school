@@ -114,8 +114,11 @@
                             </select>
                         </div>
                         <div>
-                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (للبوت):</label>
-                            <input type="text" id="newParentPhone" required placeholder="مثال: 968xxxxxxxx" class="w-full p-2.5 border rounded-xl bg-slate-50 outline-none focus:ring-2 focus:ring-indigo-500 font-bold">
+                            <label class="block mb-1 text-slate-600">رقم هاتف ولي الأمر (مع رمز الدولة أو محلي):</label>
+                            <div class="flex items-center border rounded-xl bg-slate-50 overflow-hidden focus-within:ring-2 focus-within:ring-indigo-500">
+                                <span class="bg-slate-200 text-slate-700 font-bold px-3 py-2.5 text-xs border-l">+968</span>
+                                <input type="text" id="newParentPhone" required placeholder="مثال: 98123456 أو أى رقم دولي" class="w-full p-2.5 bg-transparent outline-none font-bold">
+                            </div>
                         </div>
                         <button type="submit" class="w-full gradient-btn text-white py-3 rounded-xl font-bold shadow transition">
                             حفظ الطالب في القائمة
@@ -394,23 +397,27 @@
 
         document.getElementById('addStudentForm').addEventListener('submit', function(e) {
             e.preventDefault();
+            let rawPhone = document.getElementById('newParentPhone').value.trim();
+            // دمج رمز الدولة 968 افتراضياً إذا لم يتم إدخال مفتاح دولي
+            let formattedPhone = rawPhone.replace(/[^0-9]/g, '');
+            if (!formattedPhone.startsWith('968') && formattedPhone.length === 8) {
+                formattedPhone = '968' + formattedPhone;
+            }
+
             students.push({
                 name: sanitizeInput(document.getElementById('newStudentName').value.trim()),
                 class: sanitizeInput(document.getElementById('newStudentClass').value),
-                phone: sanitizeInput(document.getElementById('newParentPhone').value.trim())
+                phone: formattedPhone
             });
             saveToLocalServer();
             this.reset();
             renderAll();
-            showToast('تمت إضافة الطالب وحفظه بنجاح!');
+            showToast('تمت إضافة الطالب وحفظه بنجاح برمز الدولة (+968)!');
         });
 
-        // دالة الإرسال التلقائي الصامت في الخلفية عبر Green API
+        // دالة الإرسال الآلي الصامت عبر Green API لأي رقم في العالم
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
-            if(!cleanPhone.startsWith('968') && cleanPhone.length === 8) {
-                cleanPhone = '968' + cleanPhone;
-            }
             const chatId = cleanPhone + "@c.us";
             const url = `https://7107.api.greenapi.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
 
@@ -427,13 +434,13 @@
                 });
                 const result = await response.json();
                 if (response.ok) {
-                    showToast('✅ تم رصد الحالة وإرسال تنبيه الواتساب تلقائياً لولي الأمر!');
+                    showToast('✅ تم رصد الحالة وإرسال تنبيه الواتساب تلقائياً عبر البوت بنجاح!');
                 } else {
-                    showToast('⚠️ تم الحفظ ولكن فشل إرسال الواتساب تلقائياً عبر البوت.', true);
+                    showToast('⚠️ تم الحفظ ولكن فشل إرسال الواتساب تلقائياً.', true);
                 }
             } catch (error) {
                 console.error('Green API Error:', error);
-                showToast('⚠️ تم حفظ الحالة محلياً (تأكد من اتصال الإنترنت والبوت).', true);
+                showToast('⚠️ تم حفظ الحالة محلياً (تأكد من الاتصال).', true);
             }
         }
 
@@ -457,10 +464,10 @@
                                  `ولي الأمر الفاضل، نحيطكم علماً بأنه تم تسجيل حالة: (*${type}*) لابنكم (*${student.name}*) المقيد بصف (*${student.class}*) خلال (*${lesson}*) بتاريخ ${todayStr}.\n\n` +
                                  `يرجى المتابعة والتواصل الفوري مع الإدارة المدرسية.`;
 
-                // استدعاء البوت للإرسال الآلي دون فتح نوافذ جديدة
+                // إرسال آلي صامت عبر البوت لأي رقم
                 sendGreenApiMessage(student.phone, msgContent);
             } else {
-                showToast('تم رصد الحالة بنجاح (رقم ولي الأمر غير متوفر للإرسال)');
+                showToast('تم رصد الحالة بنجاح (رقم الهاتف غير متوفر)');
             }
 
             renderAll();
@@ -571,7 +578,7 @@
                         <td class="p-3 font-bold text-slate-400">${idx + 1}</td>
                         <td class="p-3 font-bold text-slate-900">${sanitizeInput(s.name)}</td>
                         <td class="p-3 text-slate-600">${sanitizeInput(s.class)}</td>
-                        <td class="p-3 text-slate-600">${sanitizeInput(s.phone)}</td>
+                        <td class="p-3 text-slate-600 dir-ltr text-right">${sanitizeInput(s.phone)}</td>
                         <td class="p-3 text-center">
                             <button onclick="deleteStudent(${idx})" class="text-rose-600 hover:text-rose-800 bg-rose-50 p-1.5 rounded-lg"><i class="fa-solid fa-trash"></i></button>
                         </td>
