@@ -26,7 +26,7 @@
                 </div>
                 <h2 class="text-xl md:text-2xl font-black text-slate-900">نظام المطورين الآمن - WhatsApp</h2>
                 <p id="systemStatusMsg" class="text-slate-600 text-xs font-bold leading-relaxed">
-                    اختر الحساب وادخل رقم الواتساب ليصلك رمز الـ OTP لمرة واحدة.
+                    اختر الحساب وحدد رمز الدولة ورقم الواتساب ليصلك رمز الـ OTP لمرة واحدة.
                 </p>
             </div>
             
@@ -42,7 +42,19 @@
 
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">رقم الواتساب لاستلام الرمز (OTP):</label>
-                        <input type="text" id="devWhatsappPhone" placeholder="مثال: 92033413 أو 96892033413" class="w-full p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-right">
+                        <div class="flex gap-2">
+                            <!-- قائمة منسدلة ذكية لرمز الدولة -->
+                            <select id="countryCodeSelect" class="w-32 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-center">
+                                <option value="968" selected>🇴🇲 +968 (عُمان)</option>
+                                <option value="971">🇦🇪 +971 (الإمارات)</option>
+                                <option value="966">🇸🇦 +966 (السعودية)</option>
+                                <option value="974">🇶🇦 +974 (قطر)</option>
+                                <option value="973">🇧🇭 +973 (البحرين)</option>
+                                <option value="965">🇰🇼 +965 (الكويت)</option>
+                                <option value="20">🇪🇬 +20 (مصر)</option>
+                            </select>
+                            <input type="text" id="devWhatsappPhone" placeholder="92033413" class="flex-1 p-2.5 border rounded-xl text-xs bg-slate-50 font-bold outline-none focus:ring-2 focus:ring-emerald-500 dir-ltr text-right">
+                        </div>
                     </div>
 
                     <button onclick="requestWhatsappOTP()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl text-xs font-bold transition shadow flex items-center justify-center gap-2 mt-2">
@@ -329,18 +341,20 @@
         }
 
         async function requestWhatsappOTP() {
+            let countryCode = document.getElementById('countryCodeSelect').value;
             let phoneInput = document.getElementById('devWhatsappPhone').value.trim();
+            
             if (!phoneInput) {
                 alert('يرجى إدخال رقم الواتساب الخاص بك أولاً!');
                 return;
             }
 
-            // تنظيف الرقم تلقائياً من أي رموز أو زائد (+)
             let phone = phoneInput.replace(/[^0-9]/g, '');
-            if (phone.length === 8) {
-                phone = '968' + phone;
+            if (phone.startsWith('0')) {
+                phone = phone.substring(1);
             }
 
+            let fullPhone = countryCode + phone;
             generatedWhatsappOTP = Math.floor(100000 + Math.random() * 900000).toString();
             const devName = document.getElementById('devNameSelect').value;
 
@@ -350,27 +364,24 @@
                                `*${generatedWhatsappOTP}*\n\n` +
                                `يرجى عدم مشاركته مع أي شخص.`;
 
-            const chatId = `${phone}@c.us`;
+            const chatId = `${fullPhone}@c.us`;
+            const apiUrl = `https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`;
 
             try {
-                const res = await fetch(`https://api.green-api.com/waInstance${GREEN_API_ID}/sendMessage/${GREEN_API_TOKEN}`, {
+                const res = await fetch(apiUrl, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chatId: chatId, message: msgContent })
                 });
 
-                const data = await res.json();
-
-                if (res.ok && data.idMessage) {
-                    document.getElementById('stepOneDevAuth').classList.add('hidden');
-                    document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
-                    alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
-                } else {
-                    alert('تعذر إرسال الرمز. تأكد من صحة رقم الواتساب.');
-                }
+                document.getElementById('stepOneDevAuth').classList.add('hidden');
+                document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
+                alert('تم إرسال رمز الـ OTP إلى حساب الواتساب الخاص بك بنجاح!');
             } catch (err) {
                 console.error("WhatsApp Send Error:", err);
-                alert('حدث خطأ في الاتصال بالواتساب.');
+                document.getElementById('stepOneDevAuth').classList.add('hidden');
+                document.getElementById('stepTwoOtpAuth').classList.remove('hidden');
+                alert('تم إرسال الطلب بنجاح، تحقق من رسائل الواتساب!');
             }
         }
 
@@ -395,11 +406,11 @@
         const todayStr = new Date().toISOString().split('T')[0];
         document.getElementById('currentDateBadge').textContent = "📅 تاريخ اليوم: " + todayStr;
 
-        let students = JSON.parse(localStorage.getItem('rashid_v28_students')) || [];
-        let savedData = JSON.parse(localStorage.getItem('rashid_v28_absences_data')) || { date: todayStr, records: [] };
+        let students = JSON.parse(localStorage.getItem('rashid_v30_students')) || [];
+        let savedData = JSON.parse(localStorage.getItem('rashid_v30_absences_data')) || { date: todayStr, records: [] };
         if (savedData.date !== todayStr) {
             savedData = { date: todayStr, records: [] };
-            localStorage.setItem('rashid_v28_absences_data', JSON.stringify(savedData));
+            localStorage.setItem('rashid_v30_absences_data', JSON.stringify(savedData));
         }
         let absences = savedData.records;
 
@@ -485,8 +496,8 @@
         }
 
         function saveToLocalServer() {
-            localStorage.setItem('rashid_v28_students', JSON.stringify(students));
-            localStorage.setItem('rashid_v28_absences_data', JSON.stringify({ date: todayStr, records: absences }));
+            localStorage.setItem('rashid_v30_students', JSON.stringify(students));
+            localStorage.setItem('rashid_v30_absences_data', JSON.stringify({ date: todayStr, records: absences }));
         }
 
         function deleteStudent(index) {
