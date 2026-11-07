@@ -201,7 +201,7 @@
                         </div>
 
                         <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-xl font-bold shadow-lg transition flex items-center justify-center gap-2 text-sm mt-4">
-                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري للواتساب عبر البوت
+                            <i class="fa-brands fa-whatsapp text-lg"></i> رصد وإرسال التنبيه الفوري عبر البوت الرقمي
                         </button>
                     </form>
                 </div>
@@ -314,7 +314,7 @@
     <!-- إشعار الحالة -->
     <div id="toastNotification" class="fixed bottom-5 left-5 bg-emerald-600 text-white px-5 py-3 rounded-2xl shadow-2xl font-bold text-sm hidden flex items-center gap-3 border border-emerald-400 z-50">
         <i class="fa-solid fa-circle-check text-xl"></i>
-        <span id="toastMsg">تم رصد الحالة وإرسال التنبيه عبر البوت!</span>
+        <span id="toastMsg">تم رصد الحالة وإرسال التنبيه عبر البوت الرقمي!</span>
     </div>
 
     <!-- منطقة طباعة التقرير الخفية -->
@@ -361,7 +361,6 @@
 
         let students = JSON.parse(localStorage.getItem('rashid_v39_students')) || [];
         
-        // التحقق من المؤقت الآلي (24 ساعة) لمسح بيانات الغياب
         let absStorage = JSON.parse(localStorage.getItem('rashid_v39_absences_meta'));
         let nowTime = new Date().getTime();
         let absences = [];
@@ -423,7 +422,7 @@
             showToast('تمت إضافة الطالب وحفظه بنجاح!');
         });
 
-        // دالة الإرسال عبر البوت الرقمي (Green API) لأي رقم في العالم بحرية تامة
+        // دالة الإرسال الآلي الحصري عبر البوت الرقمي (Green API) لأي رقم هاتف في العالم
         async function sendGreenApiMessage(phone, messageText) {
             let cleanPhone = phone.replace(/[^0-9]/g, '');
             const chatId = cleanPhone + "@c.us";
@@ -442,17 +441,13 @@
                 });
                 
                 if (response.ok) {
-                    showToast('🤖✅ تم إرسال تنبيه البوت الرقمي لولي الأمر بنجاح!');
+                    showToast('🤖✅ تم إرسال التنبيه عبر البوت الرقمي لولي الأمر بنجاح!');
                 } else {
-                    const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
-                    window.open(waLink, '_blank');
-                    showToast('⚠️ تم فتح رابط الواتساب المباشر للإرسال الفوري.', false);
+                    showToast('❌ تعذر إرسال الرسالة عبر البوت، تحقق من اتصال واجهة البوت.', true);
                 }
             } catch (error) {
                 console.error('Green API Error:', error);
-                const waLink = `https://api.whatsapp.com/send?phone=${cleanPhone}&text=${encodeURIComponent(messageText)}`;
-                window.open(waLink, '_blank');
-                showToast('🚀 تم فتح رابط الواتساب للإرسال المباشر.');
+                showToast('❌ حدث خطأ أثناء الاتصال بالبوت الرقمي.', true);
             }
         }
 
